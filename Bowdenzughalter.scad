@@ -25,8 +25,8 @@ delta=0.7;
 
 dr1=6.9;
 dr2=0;
-dl1=5.3;
-dl2=3.3;
+dl1=0;
+dl2=9;
 
 dbohr=5.1;
 
@@ -64,7 +64,6 @@ module main()
 		// Aussparungen für Kabel
 		cables(dr1, dr2);
 		mirror([1,0,0]) cables(dl1, dl2);
-
 		}
 }
 
@@ -84,7 +83,7 @@ module cables(d1,d2) {
 
 	w3deg=(r2ges)/(dr/2)*180/3.14;
 	rotate([0,0,-90+w3deg]) {
-		translate([dr/2-5,0,-1]) cube([(da-dr)/2+10,30,h+2]);
+		translate([0,0,-1]) cube([da,30,h+2]);
 		r3=(da-dr)/4;
 		translate([dr/2+r3,-r3,-1]) difference() {
 			cube([r3*3,r3*3,h+2]);
