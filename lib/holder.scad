@@ -1,3 +1,7 @@
+
+use <shortcuts.scad>
+
+
 // preview[view:northwest, tilt:bottomdiagonal]
 
 /* [holder chinese laser] */
@@ -43,6 +47,7 @@ module holder2() {
 
 module holder3() {
 	r=0.1;
+	Tz(clf_partHeight/2) Ty(-(clf_wall+(clf_innerDepth+clf_wall*2)/2))
 	difference() {
 		w=clf_innerWidth+clf_wall*2-0.01;
 		translate([-w/2,clf_wall-0.01+r,-(clf_partHeight+0.01)])

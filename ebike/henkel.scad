@@ -1,8 +1,16 @@
 use<lib/shortcuts.scad>
 
-
+langloch();
 *henkel();
 
+module langloch(r=2.5,d=8,h=20)
+{
+	hull() {
+	Tx(-d/2) Cy(r=r, h=h);
+	Tx(+d/2) Cy(r=r, h=h);
+	}
+}
+	
 module rounded_box(l,b,h,r,w)
 {
 	ri=r-w;

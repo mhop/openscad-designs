@@ -1,12 +1,13 @@
 
 use <lib/shortcuts.scad>;
 use <lib/box_complete.scad>;
+use <lib/holder.scad>;
 
-use <holder.scad>;
 use <xt90.scad>;
 use <rahmen.scad>;
 use <henkel.scad>;
 use <vesc.scad>;
+use <einschub.scad>;
 
 akkuL=210;
 akkuLk=175;
@@ -28,60 +29,82 @@ Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
 *akkubox();
 
 Ty((akkuB+30)) Tz((wand+6))
-	unterplatte();
-
-Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-14)/2) 
+{	D() {
+		unterplatte();
+	Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
+	}
+}	
+*Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-14)/2) 
 	controllerbox();
 
-Tz(78) Tx(0) 
+*Tz(78) Tx(0)
+	D() {
 	halter();
-
+			// Loecher für Flaschenhalterung
+			Tx(-31) langloch(r=3, d=8, h=30);
+			Tx(-96) langloch(r=3, d=8, h=30);
+	}
 // --------------------------------------------------------------
 
 module halter()
 {
 	schieneB=akkuB;
+	schieneL=20;
+	blockL=10;
 	h=wand*3;
 	l=akkuL+wand*2;
-	block1x=0;
-	block2x=l-50;
-	schieneL=30;
+	block1x=blockL+wand;
+	block2x=l/2-schieneL/2;
+	block3x=l-(schieneL+blockL+wand);
 
 	Rx(180) Rz(180) Tx(-l/2)  {
-	Tx(block1x) Cu(10,schieneB+wand*2, h);
-	Tx(block2x) Cu(10,schieneB+wand*2, h);
+	Tx(block1x-blockL/2) Cu(blockL,schieneB+wand*2, h);
+	Tx(block2x-blockL/2) Cu(blockL,schieneB+wand*2, h);
+	Tx(block3x-blockL/2) Cu(blockL,schieneB+wand*2, h);
 	D() {
 			T(0,0,-h/2) R(90,0,-90)
 				holder(t=1, clf_wall = wand, 
 							clf_partHeight=l,
 							clf_innerWidth = schieneB);
-			l1=block2x-schieneL-10/2;
-			l2=l-block2x-schieneL;
+		    // Schienen anschraegen
+			l1=block2x-block1x-schieneL-blockL/2;
+			l2=block3x-block2x-schieneL-blockL/2;
+			l3=l-block3x--schieneL-blockL/2;
 			Tx(block1x+schieneL+l1/2)   Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l1, 10, 10);
-			Tx(block2x+schieneL+10+0.1) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l2, 10, 10);
 			Tx(block1x+schieneL+l1/2)   Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l1, 10, 10);
-			Tx(block2x+schieneL+10+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l2, 10, 10);
+			Tx(block2x+schieneL+l2/2+0.1) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l2, 10, 10);
+			Tx(block2x+schieneL+l2/2+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l2, 10, 10);
+			Tx(block3x+schieneL+l3/2+0.1) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l3, 10, 10);
+			Tx(block3x+schieneL+l3/2+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l3, 10, 10);
 		}
 	}
 
-h_up=wand*3;
-l_up=akkuL*1.5;
-b_up=akkuB+2*rund+2*wand;
-Tz(0) Tx(49)
-D() {
-	rounded_box(l=l_up, h=h_up, b=b_up, r=rund/2);
-	Tx(-50) Tz(-h_up/2+h/2-0.1) Cu(l, schieneB+wand*2, h);
-	Tx(-l_up/2+27/2) Tz(h/2) Cu(27, 15, h);
-}
+	h_up=wand*3;
+	l_up=akkuL*1.5;
+	b_up=akkuB+2*rund+2*wand;
+	Tz(0) Tx(49) {
+		D() {
+			rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
+			Tx(-55) Tz(-h_up/2+h/2-0.1) Cu(l, schieneB+wand*2, h);
+			Tx(-l_up/2+27/2) Tz(h/2) Cu(27, 15, h);
+			// einschub hinten
+			Tx(l_up/2-70/2+0.1) weg(70,30,h);
+		}
+	}
 	//rounded_box(l=l_up, h=h_up, b=b_up, r=rund/2);
 }
+
 // --------------------------------------------------------------
 
 module unterplatte()
 {
+	schieneB=akkuB;
+
 	l=akkuL+2*wand;
 	b=akkuB+2*wand+2*rund;
 	h=6*rund;
+
+
 	Rx(180) I() {
 		mybox(outlid=1);
 		Tx(0)Ty(b+12) Tz(-46.2)  
@@ -93,79 +116,22 @@ module unterplatte()
 			Tx(-(l/2-rund)) Ty(-(b/2-rund)) Tz(-h/2) Cy(r=6, h=5);
 		}
 	}
-}
-
-// --------------------------------------------------------------
-/*
-module controllerbox() 
-{
- l=akkuB*1.5; 
- b=akkuB+2*rund+2*wand;
- h=akkuH+rund+wand*2+wand;
- //Tz(h/2-wand) Cu(l,b,3*wand); 
- 
-// deckel abgerundet
-*D() {	
- rounded_box(l=l, b=b, h=h, r=rund, w=wand);
-	Ry(4)Tx(25)Cu(100,b*2,h*2);
-	Tz(-wand-1+40) Tx(-(akkuL+rund*2+akkuB*1.5-14)/2+100) Ty(-akkuB/3) Ry(90)  xt90();
+    // Schienen
+	Ty(-schieneB/2-b/2-20) Tz(akkuH/2+wand+0.1) 
+	{
+		Tx(-(akkuL/2-30/2-10)) Ry(-90) Rz(90) holder(t=3, clf_wall = wand, 
+				clf_partHeight=30,
+				clf_innerWidth = schieneB);
+		Tx(+akkuL/2-30/2-10) Ry(-90) Rz(90) holder(t=3, clf_wall = wand, 
+				clf_partHeight=30,
+				clf_innerWidth = schieneB);
+		Tx(0) Ry(-90) Rz(90) holder(t=3, clf_wall = wand, 
+				clf_partHeight=30,
+				clf_innerWidth = schieneB);
+	}
 
 }
-// unterteil abgerundet
-*D() {	
- rounded_box(l=l, b=b, h=h, r=rund, w=wand);
- Ry(4)Tx(-45)Cu(40,b*2,h*2);
-}
 
- // Wasserdichte Box unten abgeschnitten
- D() {
- Tx(l/2+22) Ty(-39) Tz(-h/2+wand) Ry(0) Ry(-90)mycontrollerbox(outbox=1);
- Ry(0) Tx(80) Cu(akkuH,akkuH,akkuH*2);
- }
- 
-U() {
- // Deckel
- Tx(-wand*3.5+6) Tz((akkuH+10)/2)Ty(-akkuB-39-22)Ry(90)mycontrollerbox(outlid=1);
- h_xt90halter=38;
- *Tx(-h_xt90halter+4*wand) Ty(-akkuB/2+10) Tz(akkuH/4+5) Ry(90) Cu(40, 25, h_xt90halter);
-
- // xt90 halter
-*Tz(-wand-1) Tx(-(akkuL+rund*2+akkuB*1.5-14)/2) 
-*D() {
- 			Tz(40) Tx(97) Ty(-akkuB/4) Ry(90) 
-				Cy(r1=12, r2=23, h=20, center=true);
-			Tz(40) Tx(100) Ty(-akkuB/3) Ry(90)  xt90();
-}
-}
- 
-}
-
-module mycontrollerbox(outbox=0, outlid=0)
-{
-	x=akkuH+10;
-	y=akkuB+rund*2-2;
-	h=akkuB-wand;
-//T(-x/2, -y/2, -(h+wand)/2)
-box_wp(
-	// [Box Options] 
-	// Dimension: Box outer X-Size [mm]
-	box_Size_X          = x,
-	// Dimension: Box outer Y-Size [mm]
-	box_Size_Y          = y,
-	// Dimension: Box Inner height [mm]
-	box_Inner_Height    = h,
-	// Box bottom/top thickness
-	box_BottomTop_Thickness =  wand*1.5, // [0.6:0.2:3]
-	// Edge corner radius 
-	box_Screw_Corner_Radius   =  rund, // [2:1:10]
-	// four outer screw hole diameters
-	box_Screw_Diameter     =  3.2,// [2:0.2:4]
-	// Box wall thickness
-	box_Wall_Thickness     =  wand, // [0.4:0.2:3.2]
-	outbox=outbox, outlid=outlid
-);
-}
-*/
 // --------------------------------------------------------------
 
 module akkubox()

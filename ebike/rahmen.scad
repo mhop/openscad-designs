@@ -28,12 +28,12 @@ cylinder(r=rg,h=600, center=1);
 
 	
 // Streben
-translate([-150,49,strebZ])
-rotate([0,90,-2.5])
+translate([-150,47,strebZ])
+rotate([0,90,-2.15])
 cylinder(r=rk,h=500,center=1);
 
-translate([-150,-49, strebZ])
-rotate([0,90,2.5])
+translate([-150,-47, strebZ])
+rotate([0,90,2.15])
 cylinder(r=rk,h=500, center=1);
 
 steg(x=-rg/2, l=96);
@@ -49,8 +49,11 @@ steg(x=s2x, l=79);
 module steg(x,l)
 {
 	translate([x-rk,l/2, strebZ])
-	rotate([90,0,0])
-	cylinder(r=rk,h=l, center=1);
+	{
+		rotate([90,0,0])
+			cylinder(r=rk,h=l, center=1);
+	}
+	Tx(x-rk) Cy(r=2, h=40);
 }
 
 
