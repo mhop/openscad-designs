@@ -24,26 +24,41 @@ view_mitte=1;
 $fn=80;
 
 *Rx(180) Rz(180)akkuK();
-Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
+*Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
 
 *akkubox();
 
-Ty((akkuB+30)) Tz((wand+6))
+*Ty((akkuB+30)) Tz((wand+6))
 {	D() {
 		unterplatte();
 	Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
 	}
-}	
+}
+
+
 *Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-14)/2) 
 	controllerbox();
 
-*Tz(78) Tx(0)
+h_up=wand*3;
+l_up=akkuL*1.5;
+b_up=akkuB+2*rund+2*wand;
+l_einschub=70;
+Tx(l_up/2-l_einschub/2-73)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
+einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up) 
+	rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
+
+Tz(78) Tx(0) {
 	D() {
 	halter();
 			// Loecher für Flaschenhalterung
 			Tx(-31) langloch(r=3, d=8, h=30);
 			Tx(-96) langloch(r=3, d=8, h=30);
+			Tx(-akkuL/2+7) Ty(20)Tz(2*wand+5/2-2) Cu(20,20,5);
+			Tx(-akkuL/2+7) Ty(-20) Tz(2*wand+5/2-2) Cu(20,20,5);
+			Tx(-akkuL/2-4) Ty(0) Tz(2*wand+5/2-2) Cu(5,50,5);
 	}
+}
+
 // --------------------------------------------------------------
 
 module halter()
@@ -84,11 +99,11 @@ module halter()
 	b_up=akkuB+2*rund+2*wand;
 	Tz(0) Tx(49) {
 		D() {
-			rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
+			ausschnitt(l_up/2-70/2+0.1, 0 ,70, 30, h_up)
+				rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
 			Tx(-55) Tz(-h_up/2+h/2-0.1) Cu(l, schieneB+wand*2, h);
 			Tx(-l_up/2+27/2) Tz(h/2) Cu(27, 15, h);
 			// einschub hinten
-			Tx(l_up/2-70/2+0.1) weg(70,30,h);
 		}
 	}
 	//rounded_box(l=l_up, h=h_up, b=b_up, r=rund/2);
@@ -119,15 +134,21 @@ module unterplatte()
     // Schienen
 	Ty(-schieneB/2-b/2-20) Tz(akkuH/2+wand+0.1) 
 	{
-		Tx(-(akkuL/2-30/2-10)) Ry(-90) Rz(90) holder(t=3, clf_wall = wand, 
+		D() {
+			U(){
+		Tx(-(akkuL/2-(30-10)/2-10)) Ry(90) Rz(-90) holder(t=3, clf_wall = wand, 
+				clf_partHeight=30+10,
+				clf_innerWidth = schieneB);
+		Tx(+akkuL/2-30/2-10) Ry(90) Rz(-90) holder(t=3, clf_wall = wand, 
 				clf_partHeight=30,
 				clf_innerWidth = schieneB);
-		Tx(+akkuL/2-30/2-10) Ry(-90) Rz(90) holder(t=3, clf_wall = wand, 
+		Tx(0) Ry(90) Rz(-90) holder(t=3, clf_wall = wand, 
 				clf_partHeight=30,
 				clf_innerWidth = schieneB);
-		Tx(0) Ry(-90) Rz(90) holder(t=3, clf_wall = wand, 
-				clf_partHeight=30,
-				clf_innerWidth = schieneB);
+			}
+		Tx(-(akkuL/2-15/2)-wand) Ty(akkuB/2+2) Tz(2*wand) Cu(15,15,25);
+		Tx(-(akkuL/2-15/2)-wand) Ty(-akkuB/2-2) Tz(2*wand) Cu(15,15,25);
+			}
 	}
 
 }

@@ -8,8 +8,8 @@ use <shortcuts.scad>
 
 
 
-holder(t=3, clf_partHeight=30, clf_innerWidth = 70);
-*holder(t=1, clf_partHeight=250, clf_innerWidth = 70);
+*holder(t=3, clf_partHeight=30, clf_innerWidth = 70);
+holder(t=1, clf_partHeight=250, clf_innerWidth = 70);
 
 
 module holder(t=1,
@@ -21,10 +21,11 @@ clf_innerWidth = 17.21, // the side to side of the shaft
 clf_innerDepth = 3, // the depth the shaft
 // height does not matter much for the male part, as it will pass trhu the whole part. So just enter a good height so that it reaches the latch on the bottom.
 clf_partHeight = 22.75,
-// width of the thumb thing for the latch
-clf_handle_width = 11.6
 ) 
 {
+
+// width of the thumb thing for the latch
+clf_handle_width = clf_innerWidth*0.8;
 
 if(t==1) clf_main();
 
@@ -69,34 +70,30 @@ module main_part(){
 }
 module latch(){
 	// bottom latch
-	translate([ 0, 0, -clf_wall ] ){
+	*translate([ 0, 0, -clf_wall ] ){
 		cube( [ clf_handle_width/2 -0.5, clf_wall, clf_wall] );
 	}
 	// the latching block
-	translate([ 0, clf_wall, -3-clf_wall ] ){
+	translate([clf_handle_width/3 , clf_wall, clf_wall*2 ] ){
 		difference() {
-		cube( [ 5.20/2, 1.15, 3] );
-		translate([ 0, 1.2, 0.5 ] )rotate([25,0,0])cube( [ 5.20/2, 1.15, 5] );
+		cube( [ 5.20, 1.15, 3] );
+		translate([ 0, 1.2, 0.5 ] )rotate([25,0,0])cube( [ 5.20, 1.15, 5] );
 		}
 	}
 	// the lachking block base
-	translate([ 0, 0, -3-clf_wall ] ){
+	*translate([ 0, 0, -3-clf_wall ] ){
 		cube( [ clf_handle_width/2, clf_wall, 3] );
 	}
 	//handle();
 }
 module handle(){
 	// the handle
-	translate([ 0, clf_wall, -3-clf_wall ] ){
-		rotate([45, 0, 0])
-			difference(){
-				cylinder( h=clf_wall, r=clf_handle_width/2);
-				color("blue") rotate([0,0,90])
-					translate([0, -clf_handle_width/2-0.001,-0.001])
-						cube([ clf_handle_width/2+0.002, clf_handle_width+0.002 , clf_handle_width+0.002]);
-			}
+	translate([ 0, clf_wall, clf_wall-2 ] ){
+		rotate([90, 0, 0]) I(){
+			cylinder( h=clf_wall, r=clf_handle_width/2*0.9);
+			Ty(-clf_handle_width/2) Tz(clf_wall/2) Cu(clf_handle_width, clf_handle_width,clf_wall+1);
+		}
 	}
-
 }
 
 module main_cuts(){
@@ -111,6 +108,14 @@ module main_cuts(){
 	// the two cuts on the side leading to the latch so that it can move back/forth
 	translate( [ clf_handle_width/2-0.5, -0.001, -0.001] ){
 		cube([ 0.55, clf_wall+0.002, clf_partHeight/10+0.001]);
+	}
+	// the two cuts on the side leading to the latch so that it can move back/forth
+	translate( [ clf_handle_width/4-0.5, -0.001, -0.001] ){
+		cube([ 0.55, clf_wall+0.002, clf_partHeight/10+0.001]);
+	}
+	// the two cuts on the side leading to the latch so that it can move back/forth
+	 translate( [ 0, -0.001, 2-0.001] ){
+		 Ry(90)cube([1.55, clf_wall+0.002, clf_handle_width/4+0.001]);
 	}
 }
 
