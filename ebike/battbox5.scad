@@ -26,9 +26,12 @@ $fn=80;
 *Rx(180) Rz(180)akkuK();
 *Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
 
+D() {
+	{
+
 *akkubox();
 
-*Ty((akkuB+30)) Tz((wand+6))
+Ty((akkuB+30)) Tz((wand+6))
 {	D() {
 		unterplatte();
 	Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
@@ -43,20 +46,27 @@ h_up=wand*3;
 l_up=akkuL*1.5;
 b_up=akkuB+2*rund+2*wand;
 l_einschub=70;
-Tx(l_up/2-l_einschub/2-73)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
+*Tx(l_up/2-l_einschub/2-73)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
 einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up) 
 	rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
 
-Tz(78) Tx(0) {
+*Tz(78) Tx(0) {
 	D() {
 	halter();
 			// Loecher für Flaschenhalterung
 			Tx(-31) langloch(r=3, d=8, h=30);
 			Tx(-96) langloch(r=3, d=8, h=30);
-			Tx(-akkuL/2+7) Ty(20)Tz(2*wand+5/2-2) Cu(20,20,5);
-			Tx(-akkuL/2+7) Ty(-20) Tz(2*wand+5/2-2) Cu(20,20,5);
+			Tx(-akkuL/2+7) Ty(20.5)Tz(2*wand+5/2-2) Cu(23,15,5);
+			Tx(-akkuL/2+7) Ty(-20.5) Tz(2*wand+5/2-2) Cu(23,15,5);
 			Tx(-akkuL/2-4) Ty(0) Tz(2*wand+5/2-2) Cu(5,50,5);
 	}
+}
+
+}
+
+Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
+
+
 }
 
 // --------------------------------------------------------------
