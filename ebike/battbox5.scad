@@ -1,7 +1,8 @@
 
 use <lib/shortcuts.scad>;
 use <lib/box_complete.scad>;
-use <lib/holder.scad>;
+use <lib/slide.scad>;
+use <lib/misc.scad>;
 
 use <xt90.scad>;
 use <rahmen.scad>;
@@ -27,30 +28,32 @@ $fn=80;
 *Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
 
 D() {
-	{
+
+{
 
 *akkubox();
 
-Ty((akkuB+30)) Tz((wand+6))
+// Unterplatte -----------
+*Ty((akkuB+30)) Tz((wand+6))
 {	D() {
 		unterplatte();
 	Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
 	}
 }
 
-
-*Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-14)/2) 
+// Controllerbox --------
+*Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-13)/2) 
 	controllerbox();
-
 h_up=wand*3;
 l_up=akkuL*1.5;
 b_up=akkuB+2*rund+2*wand;
 l_einschub=70;
-*Tx(l_up/2-l_einschub/2-73)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
+*Tx(l_up/2-l_einschub/2-75)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
 einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up) 
 	rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
 
-*Tz(78) Tx(0) {
+
+Tz(78) Tx(0) {
 	D() {
 	halter();
 			// Loecher für Flaschenhalterung
@@ -64,7 +67,7 @@ einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up)
 
 }
 
-Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
+//Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
 
 
 }
@@ -74,7 +77,7 @@ Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
 module halter()
 {
 	schieneB=akkuB;
-	schieneL=20;
+	schieneL=15;
 	blockL=10;
 	h=wand*3;
 	l=akkuL+wand*2;
@@ -87,10 +90,13 @@ module halter()
 	Tx(block2x-blockL/2) Cu(blockL,schieneB+wand*2, h);
 	Tx(block3x-blockL/2) Cu(blockL,schieneB+wand*2, h);
 	D() {
-			T(0,0,-h/2) R(90,0,-90)
-				holder(t=1, clf_wall = wand, 
-							clf_partHeight=l,
-							clf_innerWidth = schieneB);
+			T(l-1,0,h-1.5) R(180,0,90)
+					slide(
+					Slide_length = l,
+					Slide_width = schieneB+wand*3,
+					Slide_height=3*wand,
+					View_parts = 5//////.. 1=View Rail  2=View carriage 3= carriage for printing 4=assembly
+					);
 		    // Schienen anschraegen
 			l1=block2x-block1x-schieneL-blockL/2;
 			l2=block3x-block2x-schieneL-blockL/2;
@@ -105,7 +111,7 @@ module halter()
 	}
 
 	h_up=wand*3;
-	l_up=akkuL*1.5;
+	l_up=akkuL*1.5-2;
 	b_up=akkuB+2*rund+2*wand;
 	Tz(0) Tx(49) {
 		D() {
@@ -141,24 +147,39 @@ module unterplatte()
 			Tx(-(l/2-rund)) Ty(-(b/2-rund)) Tz(-h/2) Cy(r=6, h=5);
 		}
 	}
+	
+	
+	
     // Schienen
 	Ty(-schieneB/2-b/2-20) Tz(akkuH/2+wand+0.1) 
 	{
 		D() {
 			U(){
-		Tx(-(akkuL/2-(30-10)/2-10)) Ry(90) Rz(-90) holder(t=3, clf_wall = wand, 
-				clf_partHeight=30+10,
-				clf_innerWidth = schieneB);
-		Tx(+akkuL/2-30/2-10) Ry(90) Rz(-90) holder(t=3, clf_wall = wand, 
-				clf_partHeight=30,
-				clf_innerWidth = schieneB);
-		Tx(0) Ry(90) Rz(-90) holder(t=3, clf_wall = wand, 
-				clf_partHeight=30,
-				clf_innerWidth = schieneB);
-			}
-		Tx(-(akkuL/2-15/2)-wand) Ty(akkuB/2+2) Tz(2*wand) Cu(15,15,25);
-		Tx(-(akkuL/2-15/2)-wand) Ty(-akkuB/2-2) Tz(2*wand) Cu(15,15,25);
-			}
+				Tx(-(akkuL/2-(30-10)/2-30))  Tz(-4.5) Rz(-90) 
+					slide(
+					Slide_length = 30+10,
+					Slide_width = schieneB,
+					Slide_height=3*wand,
+					View_parts = 1//////.. 1=View Rail  2=View carriage 3= carriage for printing 4=assembly
+					);
+				Tx(+akkuL/2-30/2-10) Tz(-4.5) Rz(-90) 
+					slide(
+					Slide_length = 30,
+					Slide_width = schieneB,
+					Slide_height=3*wand,
+					View_parts = 1//////.. 1=View Rail  2=View carriage 3= carriage for printing 4=assembly
+					);
+				Tx(0) Tz(-4.5)Rz(-90) 
+					slide(
+					Slide_length = 30,
+					Slide_width = schieneB,
+					Slide_height=3*wand,
+					View_parts = 1//////.. 1=View Rail  2=View carriage 3= carriage for printing 4=assembly
+					);
+				}
+				Tx(-(akkuL/2-15/2)-wand) Ty(akkuB/2+3) Tz(2*wand) Cu(15,15,25);
+			Tx(-(akkuL/2-15/2)-wand) Ty(-akkuB/2-3) Tz(2*wand) Cu(15,15,25);
+		}
 	}
 
 }
@@ -176,7 +197,7 @@ module akkubox()
 			Tz(40) Tx(97) Ty(-akkuB/4) Ry(90) 
 				Cy(r1=12, r2=23, h=20, center=true);
 		}
-		Tz(40) Tx(100) Ty(-akkuB/3) Ry(90)  xt90();
+		//Tz(40) Tx(100) Ty(-akkuB/3) Ry(90)  xt90();
 	}
 }
 
@@ -206,8 +227,6 @@ Tx(-69) Rx(90) donut(r=65, rr=10);
 	Tx(-(akkuL/2-100)) Cu([200,200,200]);
 }
 }
-
-
 
 module myroundedBox() 
 {

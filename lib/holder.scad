@@ -8,8 +8,8 @@ use <shortcuts.scad>
 
 
 
-*holder(t=3, clf_partHeight=30, clf_innerWidth = 70);
-holder(t=1, clf_partHeight=250, clf_innerWidth = 70);
+holder(t=3, clf_partHeight=30, clf_innerWidth = 70);
+*holder(t=3, clf_partHeight=250, clf_innerWidth = 70);
 
 
 module holder(t=1,
@@ -34,7 +34,7 @@ if(t==2) holder2();
 if(t==3) holder3();
 	
 module holder2() {
-	r=0.1;
+	r=0.2;
 	difference() {
 		w=clf_innerWidth+clf_wall*2-0.01;
 		translate([-w/2,clf_wall-0.01+r,-(clf_partHeight+6.5+0.01)])
@@ -47,11 +47,11 @@ module holder2() {
 }
 
 module holder3() {
-	r=0.1;
+	r=0.3;
 	Tz(clf_partHeight/2) Ty(-(clf_wall+(clf_innerDepth+clf_wall*2)/2))
 	difference() {
-		w=clf_innerWidth+clf_wall*2-0.01;
-		translate([-w/2,clf_wall-0.01+r,-(clf_partHeight+0.01)])
+		w=clf_innerWidth+clf_wall*2-0.1;
+		translate([-w/2, clf_wall+r, -(clf_partHeight+0.1)])
 			cube([w, clf_innerDepth+clf_wall*2,clf_partHeight]);
 		minkowski() {
 			clf_main();
@@ -64,7 +64,7 @@ module main_part(){
 	latch();
 	difference(){
 		// the main block where we will chip the pieces away
-		cube([ clf_innerWidth/2 + clf_wall, clf_innerDepth+clf_wall*2 , clf_partHeight] );
+		cube([ clf_innerWidth/2 + clf_wall, clf_innerDepth+clf_wall*2,clf_partHeight]);
 		main_cuts();
 	}
 }
@@ -77,45 +77,45 @@ module latch(){
 	translate([clf_handle_width/3 , clf_wall, clf_wall*2 ] ){
 		difference() {
 		cube( [ 5.20, 1.15, 3] );
-		translate([ 0, 1.2, 0.5 ] )rotate([25,0,0])cube( [ 5.20, 1.15, 5] );
+		translate([ 0, 0, -0 ] )rotate([-25,0,0])cube( [ 5.20, 1.15, 5] );
 		}
 	}
 	// the lachking block base
 	*translate([ 0, 0, -3-clf_wall ] ){
 		cube( [ clf_handle_width/2, clf_wall, 3] );
 	}
-	//handle();
+	*handle();
 }
 module handle(){
 	// the handle
 	translate([ 0, clf_wall, clf_wall-2 ] ){
 		rotate([90, 0, 0]) I(){
 			cylinder( h=clf_wall, r=clf_handle_width/2*0.9);
-			Ty(-clf_handle_width/2) Tz(clf_wall/2) Cu(clf_handle_width, clf_handle_width,clf_wall+1);
+			Ty(-clf_handle_width/2) Tz(clf_wall/2) Cu(clf_handle_width, 			clf_handle_width,clf_wall+1);
 		}
 	}
 }
 
 module main_cuts(){
 	// the inner shaft
-	translate( [ -0.001, clf_wall, -0.001] ){
-		cube([ clf_innerWidth/2+0.001, clf_innerDepth, clf_partHeight+0.002] );
+	translate( [ -0.1, clf_wall, -0.1] ){
+		cube([ clf_innerWidth/2+0.1, clf_innerDepth, clf_partHeight+0.2] );
 	}
 	// the front wall opening
-	translate( [ -0.001, (clf_wall)+clf_innerDepth-0.001, -0.001] ){
-		cube([ clf_innerWidth/2-clf_innerDepth+0.001, clf_wall+0.002, clf_partHeight+0.002] );
+	translate( [ -0.1, (clf_wall)+clf_innerDepth-0.1, -0.1] ){
+		cube([ clf_innerWidth/2-clf_innerDepth+0.1, clf_wall+0.2, clf_partHeight+0.2] );
 	}
 	// the two cuts on the side leading to the latch so that it can move back/forth
-	translate( [ clf_handle_width/2-0.5, -0.001, -0.001] ){
-		cube([ 0.55, clf_wall+0.002, clf_partHeight/10+0.001]);
+	translate( [ clf_handle_width/2-0.5, -0.1, -0.1] ){
+		cube([ 0.55, clf_wall+0.2, clf_partHeight/10+0.1]);
 	}
 	// the two cuts on the side leading to the latch so that it can move back/forth
-	translate( [ clf_handle_width/4-0.5, -0.001, -0.001] ){
-		cube([ 0.55, clf_wall+0.002, clf_partHeight/10+0.001]);
+	translate( [ clf_handle_width/4-0.5, -0.1, -0.1] ){
+		cube([ 0.55, clf_wall+0.2, clf_partHeight/10+0.1]);
 	}
 	// the two cuts on the side leading to the latch so that it can move back/forth
-	 translate( [ 0, -0.001, 2-0.001] ){
-		 Ry(90)cube([1.55, clf_wall+0.002, clf_handle_width/4+0.001]);
+	 translate( [ 0, -0.1, 2-0.1] ){
+		 Ry(90)cube([1.55, clf_wall+0.2, clf_handle_width/4+0.1]);
 	}
 }
 
@@ -123,7 +123,7 @@ module clf_main(){
 	translate([0,0,-clf_partHeight]){
 		main_part();
 		actual_mirror();
-		handle();
+		//handle();
 	}
 }
 

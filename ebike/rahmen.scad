@@ -53,7 +53,8 @@ module steg(x,l)
 		rotate([90,0,0])
 			cylinder(r=rk,h=l, center=1);
 	}
-	Tx(x-rk) Cy(r=2, h=40);
+	// Hilfslinien Flaschenhalterlöcher
+	//Tx(x-rk) Cy(r=2, h=40);
 }
 
 

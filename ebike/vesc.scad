@@ -15,13 +15,16 @@ wand=3;
 
 controllerbox();
 
-Tx(28) Ty(-15) Tz(30) Ry(-90) 
+*Tx(28) Ty(-15) Tz(30) Ry(-90) 
 	vesc_holder();
 
 Tx(44) Ty(-15) Tz(-28) Ry(90) 
 	vesc_caps();
 Tx(30) Ty(-15) Tz(-28) Ry(90) 
 	vesc_caps();
+
+
+
 
 
 module vesc_holder()
@@ -60,19 +63,19 @@ module vesc_caps()
 
 module controllerbox() 
 {
-	l=akkuB*1.5; 
+	l=akkuB*1.4; 
 	b=akkuB+2*rund+2*wand;
 	h=akkuH+rund+wand*2+wand;
 	
 	// deckel abgerundet
-	*D() {	
+	D() {	
 	 rounded_box(l=l, b=b, h=h, r=rund, w=wand);
 		Ry(4)Tx(25)Cu(100,b*2,h*2);
-		Tz(-wand-1+40) Tx(-(akkuL+rund*2+akkuB*1.5-14)/2+100) Ty(-akkuB/3) Ry(90)  xt90();
+		//Tz(-wand-1+40) Tx(-(akkuL+rund*2+akkuB*1.5-14)/2+100) Ty(-akkuB/3) Ry(90)  xt90();
 	}
 	
 	// unterteil abgerundet
-	D() {	
+	Tx(0.4)D() {	
 		rounded_box(l=l, b=b, h=h, r=rund, w=wand);
 		Ry(4)Tx(-45)Cu(40,b*2,h*2);
 		// Loecher oben für Kabel
@@ -84,8 +87,14 @@ module controllerbox()
 		Tx(18) Ty(b/4)  Tz(-h/2+6-(wand/2)) Cy(r=rduenn, h=5);
 		Tx(18) Ty(-b/4) Tz(-h/2+6-(wand/2)) Cy(r=rduenn, h=5);
 	}
+	*Tx(12) Ry(-90) vesc_box();
 
-	Tx(12) Ry(-90) vesc_box();
+// Schloss
+Tx(-33) Ty(-33) Tz(50) Ry(180) Rx(-90) {
+	Cy(r=18/2, h=22);
+	Tz(20/2) Tx(47/2) Cu(47,18,2);
+}
+
 	
 }
 
