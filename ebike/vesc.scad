@@ -1,8 +1,7 @@
 
 use <lib/shortcuts.scad>
 use <lib/box_complete.scad>;
-
-use <henkel.scad>
+use <lib/mhop_lib.scad>
 
 akkuL=210;
 akkuLk=175;
@@ -11,6 +10,7 @@ akkuB=69;
 akkuH=125;
 rund=6;
 wand=3;
+
 
 
 controllerbox();
