@@ -54,9 +54,9 @@ Tz(78) Tx(0)
 		// Loecher für Flaschenhalterung
 		Tx(-31) langloch(r=3, d=8, h=30);
 		Tx(-96) langloch(r=3, d=8, h=30);
-		Tx(-akkuL/2+7) Ty(20.5)Tz(2*wand+5/2-2) Cu(23,15,5);
-		Tx(-akkuL/2+7) Ty(-20.5) Tz(2*wand+5/2-2) Cu(23,15,5);
-		Tx(-akkuL/2-4) Ty(0) Tz(2*wand+5/2-2) Cu(5,50,5);
+		//Tx(-akkuL/2+7) Ty(20.5)Tz(2*wand+5/2-1) Cu(23,15,5);
+		//Tx(-akkuL/2+7) Ty(-20.5) Tz(2*wand+5/2-1) Cu(23,15,5);
+		//Tx(-akkuL/2-3) Ty(0) Tz(2*wand+5/2-1) Cu(8,50,5);
 	}
 }
 
@@ -88,15 +88,16 @@ module halter()
 	bs=akkuB;
 	hs=h_up;
 
-	Rx(0) Rz(180) Tx(-l/2)  {
+	Rz(180) Tx(-l/2)  {
 		AkkuboxSchieneAussen();
 		// Block mit Ausschnitten
 		Tx((l_up-l)/2+rund*2) {
 			D() {
 				rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
-				Tx((l_up-l)/2+rund*2) Tz(-h_up/2+h/2-0.1) Cu(l, schieneB+wand*2, h);
-				Tx(l_up/2+27/2) Tz(h/2) Cu(27, 15, h);
-				Tx(-(l_up/2-ls/2)+0.1) Cu(ls,bs-wand,hs+10.1);
+				Tx((l_up-l)/2+rund*2) Tz(-h_up/2+h/2-0.1) 
+					Cu(l, schieneB+wand*2, h);
+				*Tx(l_up/2+27/2) Tz(h/2) Cu(27, 15, h);
+				Tx(-(l_up/2-ls/2)) Cu(ls,bs-wand,hs+10.1);
 			}
 			ControllerboxSchieneAussen();
 		}
@@ -104,7 +105,7 @@ module halter()
 
 	module ControllerboxSchieneAussen()
 	{
-		Rx(180) Tx(-(l_up/2)) Ty(bs+wand) Tz(-hs/2+0.2)  Rz(90) 
+		Rx(180) Tx(-(l_up/2)-0.1) Ty(bs+wand) Tz(-hs/2+0.2)  Rz(90) 
 			slide(
 				Slide_length = ls,
 				Slide_width = bs,
@@ -121,7 +122,7 @@ module halter()
 		Tx(block2x-blockL/2) Cu(blockL,schieneB+wand*2, h);
 		Tx(block3x-blockL/2) Cu(blockL,schieneB+wand*2, h);
 		D() {
-			T(l-1,0,h-1.5) R(180,0,90)
+			T(l+1,0,h-1.7) R(180,0,90)
 				slide(
 					Slide_length = l,
 					Slide_width = schieneB+wand*3,
