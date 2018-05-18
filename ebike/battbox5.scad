@@ -24,48 +24,41 @@ view_mitte=1;
 $fn=80;
 
 *Rx(180) Rz(180)akkuK();
-Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
+*Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
 
 D() {
+	{
+		*akkubox();
 
-{
+		// Unterplatte -----------
+		*Ty((akkuB+30)) Tz((wand+6)) { 
+			D() {
+				unterplatte();
+				Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
+			}
+		}
 
-*akkubox();
+		// Controllerbox --------
+		*Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-13)/2) controllerbox();
+		//Tx(l_up/2-l_einschub/2-75)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
+		//	einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up) 
+		//rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
 
-// Unterplatte -----------
-*Ty((akkuB+30)) Tz((wand+6)) { 
-	D() {
-		unterplatte();
-		Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
+		// Halter ------------------------------
+		Tz(78) Tx(0) {
+			D() {
+				halter();
+				// Loecher für Flaschenhalterung
+				Tx(-31) langloch(r=3, d=8, h=30);
+				Tx(-96) langloch(r=3, d=8, h=30);
+//			// Ausschnitt für Sattelrohr
+				Tx(akkuL-akkuB/2-wand+1) Cu(akkuB+wand, 30, 20);
+			}
+		}
 	}
-}
 
-// Controllerbox --------
-*Tz(wand+1) Tx((akkuL+rund*2+akkuB*1.5-13)/2) controllerbox();
-//Tx(l_up/2-l_einschub/2-75)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
-//	einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up) 
-//rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
-
-// Halter ------------------------------
-Tz(78) Tx(0) 
-{
-	D() {
-		halter();
-		// Loecher für Flaschenhalterung
-		Tx(-31) langloch(r=3, d=8, h=30);
-		Tx(-96) langloch(r=3, d=8, h=30);
-		//Tx(-akkuL/2+7) Ty(20.5)Tz(2*wand+5/2-1) Cu(23,15,5);
-		//Tx(-akkuL/2+7) Ty(-20.5) Tz(2*wand+5/2-1) Cu(23,15,5);
-		//Tx(-akkuL/2-3) Ty(0) Tz(2*wand+5/2-1) Cu(8,50,5);
-	}
-}
-
-}
-
-//Tx(akkuL/2+17) Tz(akkuH/2+20) Rz(180) Rx(180) rahmen();
-
-
-}
+Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
+} // D()...
 
 // --------------------------------------------------------------
 
@@ -96,39 +89,38 @@ module halter()
 				rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
 				Tx((l_up-l)/2+rund*2) Tz(-h_up/2+h/2-0.1) 
 					Cu(l, schieneB+wand*2, h);
-				*Tx(l_up/2+27/2) Tz(h/2) Cu(27, 15, h);
-				Tx(-(l_up/2-ls/2)) Cu(ls,bs-wand,hs+10.1);
+				Tx(-(l_up/2-ls/2)) Cu(ls,bs+wand,hs+10.1);
 			}
 			ControllerboxSchieneAussen();
 		}
-	} // T... vom Anfang
+	}
 
 	module ControllerboxSchieneAussen()
 	{
-		Rx(180) Tx(-(l_up/2)-0.1) Ty(bs+wand) Tz(-hs/2+0.2)  Rz(90) 
+		Rx(0) Tx(-(l_up/2)+0.2) Ty(0) Tz(-hs+wand/2)  Rz(90) 
 			slide(
 				Slide_length = ls,
-				Slide_width = bs,
+				Slide_width = bs+wand*2,
 				Slide_height=hs,
-				View_parts = 3
+				View_parts = 5
 			);
 	}
 	
 	module AkkuboxSchieneAussen()
 	{
 		Rx(180) {
-		// Stop-Blöcke 
-		Tx(block1x-blockL/2) Cu(blockL,schieneB+wand*2, h);
-		Tx(block2x-blockL/2) Cu(blockL,schieneB+wand*2, h);
-		Tx(block3x-blockL/2) Cu(blockL,schieneB+wand*2, h);
-		D() {
-			T(l+1,0,h-1.7) R(180,0,90)
-				slide(
-					Slide_length = l,
-					Slide_width = schieneB+wand*3,
-					Slide_height=3*wand,
-					View_parts = 5
-				);
+			// Stop-Blöcke 
+			Tx(block1x-blockL/2) Cu(blockL,schieneB+wand*2, h);
+			Tx(block2x-blockL/2) Cu(blockL,schieneB+wand*2, h);
+			Tx(block3x-blockL/2) Cu(blockL,schieneB+wand*2, h);
+			D() {
+				T(l+1,0,h-1.7) R(180,0,90)
+					slide(
+						Slide_length = l,
+						Slide_width = schieneB+wand*3,
+						Slide_height=3*wand,
+						View_parts = 5
+					);
 				// Schienen anschraegen
 				l1=block2x-block1x-schieneL-blockL/2;
 				l2=block3x-block2x-schieneL-blockL/2;
@@ -139,14 +131,10 @@ module halter()
 				Tx(block2x+schieneL+l2/2+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l2, 10, 10);
 				Tx(block3x+schieneL+l3/2+0.1) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l3, 10, 10);
 				Tx(block3x+schieneL+l3/2+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l3, 10, 10);
+			}
 		}
 	}
-	}
-
 }
-
-// --------------------------------------------------------------
-
 
 // --------------------------------------------------------------
 
@@ -222,33 +210,24 @@ module akkubox()
 		}
 		//Tz(40) Tx(100) Ty(-akkuB/3) Ry(90)  xt90();
 	}
-}
 
+	module box_oben_ohne()
+	{
+		D() {
+			mybox(outbox=1);
+			Tz(-akkuH/2-wand+2)Cu([300,300,wand*2]);
+		}
+	}
 
-module box_oben_ohne()
-{
-D() {
-	mybox(outbox=1);
-	Tz(-akkuH/2-wand+2)Cu([300,300,wand*2]);
-}
-}
+	module oben_abrunden()
+	{
+	Tz(-rund+2) 
+		D() {
+			rounded_box(l=akkuL+wand*2, b=akkuB+(rund+wand)*2, h=akkuH, r=rund, w=wand);
+			Tz(akkuH/2-rund)Cu([300,300,rund*2]);
+		}
+	}
 
-module oben_abrunden()
-{
-Tz(-rund+2) 
-D() {
-	rounded_box(l=akkuL+wand*2, b=akkuB+(rund+wand)*2, h=akkuH, r=rund, w=wand);
-	Tz(akkuH/2-rund)Cu([300,300,rund*2]);
-}
-}
-
-module henkel_alt()
-{
-Tz(-1.5)
-D() {
-Tx(-69) Rx(90) donut(r=65, rr=10);
-	Tx(-(akkuL/2-100)) Cu([200,200,200]);
-}
 }
 
 module myroundedBox() 
@@ -297,6 +276,28 @@ box_wp(
 	box_Wall_Thickness     =  wand, // [0.4:0.2:3.2]
 	outbox=outbox, outlid=outlid
 );
+}
+
+module akkuK() 
+{
+	T(-akkuL/2, 0,-akkuH/2)
+	color( "LightSkyBlue", 1.0 ) {
+		translate([0, -akkuB/2,0]) {	
+			translate([akkuL-akkuLk, 0,0]) cube([akkuLk, akkuB, akkuH]);
+			translate([0, 0,akkuH-akkuHk]) cube([akkuL, akkuB, akkuHk]);
+		}
+	}
+}
+
+/*
+
+module henkel_alt()
+{
+Tz(-1.5)
+D() {
+Tx(-69) Rx(90) donut(r=65, rr=10);
+	Tx(-(akkuL/2-100)) Cu([200,200,200]);
+}
 }
 
 module boxwuerfel() 
@@ -355,16 +356,6 @@ module box(x=0, scaleX=akkuL*1.1/20)
   }
 }
   
-  
+*/
 
   
-module akkuK() 
-{
-	T(-akkuL/2, 0,-akkuH/2)
-	color( "LightSkyBlue", 1.0 ) {
-		translate([0, -akkuB/2,0]) {	
-			translate([akkuL-akkuLk, 0,0]) cube([akkuLk, akkuB, akkuH]);
-			translate([0, 0,akkuH-akkuHk]) cube([akkuL, akkuB, akkuHk]);
-		}
-	}
-}

@@ -1,6 +1,6 @@
 
 use <shortcuts.scad>
-use <misc.scad>
+use <mhop_lib.scad>
 
 
 ///////////////////////////////////////////
@@ -16,7 +16,7 @@ slide();
 module slide(
 Slide_length = 160    ,
 Slide_width = 69     ,
-Slide_height=6,
+Slide_height=9,
 clearance = 0.1      ,//Clearance gap between parts... 0.1 default, 
 //Viewing Parameters
 $fn = 100    ,// Number of facets
@@ -38,8 +38,9 @@ if (View_parts ==1) base_rail_extruded ();
 if (View_parts ==2) move_carriage ();
 if (View_parts ==3) print_carriage();
 if (View_parts ==4) base_rail_extruded ();
-if (View_parts ==4) move_carriage ();
+if (View_parts ==4) move_carriage_clip ();
 if (View_parts ==5) move_carriage_clip ();
+if (View_parts ==6) base_rail_extruded_clip ();
 
 ///////////////////////////////////////////
 /////// The Module's used /////////////////
@@ -113,7 +114,6 @@ module top_rail()
 		square([Slide_width*0.165,clearance+0.2],false);
     *translate([Slide_width*0.322,-Slide_height*0.166,0]) 
 		square([Slide_width*0.165,clearance+0.2],false);
-    
  
 }
  
@@ -132,70 +132,82 @@ module top_rail_chamfered ()
 		square(r*2.6,true);
 	}
 }
- 
+
+
 module base_rail_extruded ()
 {
 	I() {
-    translate([0,0,Slide_height/2]) rotate(a=90,v=[1,0,0])linear_extrude(0,0,Slide_length) 
+			translate([0,0,Slide_height/2]) rotate(a=90,v=[1,0,0])linear_extrude(0,0,Slide_length) 
 		base_rail();
-	Ty(-Slide_length/2) Tz(Slide_height/2) 
-		rounded_cube(Slide_width, Slide_length, Slide_height, r);
+		// abrunden
+		Ty(-Slide_length/2) Tz(Slide_height/2) 
+			rounded_cube(Slide_width, Slide_length, Slide_height, r);
 	}
 }
- 
+
+
+module base_rail_extruded_clip ()
+{
+	D() {
+		I() {
+			translate([0,0,Slide_height/2]) rotate(a=90,v=[1,0,0])linear_extrude(0,0,Slide_length) 
+				base_rail();
+			// abrunden
+			Ty(-Slide_length/2) Tz(Slide_height/2) 
+				rounded_cube(Slide_width, Slide_length, Slide_height, r);
+		}
+		// gegenlöcher für clip
+		Ty(-7) Tz(5*Slide_height/6+0.1) Tx(-(Slide_width/3-1.5))
+			Cu(10,6,Slide_height/3);
+		Ty(-7) Tz(5*Slide_height/6+0.1) Tx(+(Slide_width/3-1.5))
+			Cu(10,6,Slide_height/3);
+	}
+}
+
 module move_carriage ()
 {
-	
    color("Green") {
-	D(){
-		U() {
-			translate([0,-0,Slide_height/2]) rotate(a=90,v=[1,0,0])linear_extrude(0,0,carriage_length) 
-				top_rail_chamfered();
-			*Tz(Slide_height+Slide_height/6) Ty(5) 
-				Cu(Slide_width*0.77, 15,Slide_height/3);
-		}
-	/*	Tz(5)Cu(Slide_width*0.45, 1,10);
-		Tx(+Slide_width*0.45/2+.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
-		Tx(-Slide_width*0.45/2-.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
-		Tx(+Slide_width*0.77/2+.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
-		Tx(-Slide_width*0.77/2-.5)Ty(-9.5)Tz(5)Cu(1, 20,10);*/
+		translate([0,-0,Slide_height/2]) rotate(a=90,v=[1,0,0])
+			linear_extrude(0,0,carriage_length)  top_rail_chamfered();
 	}
-}
 }  
 
 module move_carriage_clip ()
 {
-	
-   color("Green") {
-	D(){
-		U() {
-			translate([0,-0,Slide_height/2]) rotate(a=90,v=[1,0,0])linear_extrude(0,0,carriage_length) 
-				top_rail_chamfered();
-			Tz(Slide_height+Slide_height/6) Ty(5) 
-				rounded_cube(Slide_width*0.77, 15, Slide_height/3,r/2);
+	color("Green") {
+		D(){
+			U() { 
+				Tz(Slide_height/2) rotate(a=90,v=[1,0,0])
+					linear_extrude(0,0,carriage_length) top_rail_chamfered();
+				// Clip
+				Tz(Slide_height+Slide_height/6) Ty(5)
+					rounded_cube(Slide_width*0.77, 15, Slide_height/3,r/2);
+		// Haken
+		Ty(-7) Tz(7*Slide_height/6) Tx(Slide_width/3-1.5) I() { 
+			Tz(0)Ty(-2) Rx(30)Cu(10,5,5);
+			Tz(-3) Cu(10,5,4);
 		}
-		Tz(5)Cu(Slide_width*0.45, 1,10);
-		Tx(+Slide_width*0.45/2+.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
-		Tx(-Slide_width*0.45/2-.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
-		Tx(+Slide_width*0.77/2+.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
-		Tx(-Slide_width*0.77/2-.5)Ty(-9.5)Tz(5)Cu(1, 20,10);
+		Ty(-7) Tz(7*Slide_height/6) Tx(-(Slide_width/3-1.5)) I() {
+			Tz(0)Ty(-2) Rx(30)Cu(10,5,5);
+			Tz(-3) Cu(10,5,4);
+		}
+			}
+			// Einschnitte für Clip
+			Tz(10) Cu(Slide_width*0.46, 1,20);
+			Tx(+Slide_width*0.45/2+.5) Ty(-9.5)Tz(10) Cu(1, 20,10);
+			Tx(-Slide_width*0.45/2-.5) Ty(-9.5)Tz(10) Cu(1, 20,10);
+			Tx(+Slide_width*0.77/2+.5) Ty(-9.5)Tz(10) Cu(1, 20,10);
+			Tx(-Slide_width*0.77/2-.5) Ty(-9.5)Tz(10) Cu(1, 20,10);
+		}
 	}
-	Ty(-7) Tz(7) Tx(Slide_width/3-1.5) I() { Tz(0)Ty(-2) Rx(30)Cu(10,5,5); Tz(-3)Cu(10,5,4);}
-	Ty(-7) Tz(7) Tx(-(Slide_width/3-1.5)) I() { Tz(0)Ty(-2) Rx(30)Cu(10,5,5); Tz(-3)Cu(10,5,4);}
 }
-}  
- 
-  
+
+
 module print_carriage(){
    
  rotate(a=180,v=[0,1,0]) translate([Slide_width+rfbt,0,-rfbt-Slide_height])  move_carriage(); 
    
  } 
- 
- 
- 
-
-
 
 
 //Animate_carriage=1; // 1=Animate  0= No Animation
