@@ -28,7 +28,7 @@ b=20;           // Breite des Halters
 r_rund=0.5;
 dick=2;
 w=140;
-scaleVert=1.1;
+scaleVert=1.05;
 r_langloch=5.5/2;
 d_langloch=5;
 
