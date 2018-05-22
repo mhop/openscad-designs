@@ -1,8 +1,9 @@
 
 use <shortcuts.scad>
 
-langloch();
-*henkel();
+*langloch();
+henkel();
+
 
 module langloch(r=2.5,d=8,h=20)
 {
@@ -24,7 +25,7 @@ module rounded_box(l,b,h,r,w)
 }
 
 
-module rounded_cube(l,b,h,r)
+module rounded_cube(l,b,h,r=0.1)
 {
 	T(-l/2+r, -b/2+r, -h/2+r) { 
 		d=2*r;
@@ -57,16 +58,20 @@ module henkel(
 	H=50
 )
 {
-	lm=L-2*ri-4*rr-2*b;
 	hm=H-ri-b-2*rr;
 
 	Ty(hm-H/2) {
-	henkel_halb();
+	henkel_halb(h,b,ri,rr,L,H);
 	Mx(1)
-		henkel_halb();
+		henkel_halb(h,b,ri,rr,L,H);
 	}
-	module henkel_halb()
+}
+
+module henkel_halb(h,b,ri,rr,L,H)
 	{
+	lm=L-2*ri-4*rr-2*b;
+	hm=H-ri-b-2*rr;
+
 	Tx(lm/2) 
 		rounded_ring(ri=ri, h=h, b=b, rr=rr, w=90);
 	Ty(ri+b/2+rr/2) 
@@ -74,8 +79,6 @@ module henkel(
 	Ty(-hm/2) Tx(L/2-b/2-rr-rr/2) Rz(90) 
 		rounded_block(h=h, b=b, l=hm, rr=rr);
 	}
-}
-
 
 module rounded_ring(ri=100, h=50, b=10, rr=10, w=360)
 {
