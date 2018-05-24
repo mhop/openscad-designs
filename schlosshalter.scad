@@ -1,5 +1,8 @@
 /*
-    (c) by Marc Hoppe, 2018
+
+  Schlosshalter
+
+    by Marc Hoppe (mhop@posteo.de), 2018
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,17 +18,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+
+schlosshalter(d=13.5);
+
 $fn=80;
 
-
-halter1(l=62);
-
-
-//translate ([19,-10,-1]) cube([5,20,100]);
-
-
-module halter1(l)
+module schlosshalter(d)
 {
+	l=62;
 	rk=13/2;
 	a=13.5;
 	difference() {
@@ -38,8 +38,8 @@ module halter1(l)
 		rundfuehrung();
 		abr=a+rk-2.5;
 		riegel(off=48, d=5, ab=abr);
-		schloss(l, dm=13.5);
-		klemmung(13.5/2, 2);
+		schloss(l, dm=d);
+		klemmung(r=d/2, d=2);
 	}
 }
 
