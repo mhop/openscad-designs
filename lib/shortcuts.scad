@@ -96,9 +96,6 @@ module M(x=0, y=0, z=0) mirror(x[0]==undef?[x, y, z]:x) children();
 module Mx() mirror([1, 0, 0]) children(); 
 module My() mirror([0, 1, 0]) children(); 
 module Mz() mirror([0, 0, 1]) children(); 
-module MMx() { children(); mirror([1, 0, 0]) children(); }
-module MMy() { children(); mirror([0, 1, 0]) children(); } 
-module MMz() { children(); mirror([0, 0, 1]) children(); }
 
 module S(x=1, y=undef, z=undef){ scale(x[0]==undef?[x, y?y:x, z?z:y?1:x]:x) children();}
 module Sx(x=1){scale([x, 1, 1]) children();}

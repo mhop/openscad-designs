@@ -4,6 +4,9 @@ use <shortcuts.scad>
 *langloch();
 henkel();
 
+module MMx() { children(); mirror([1, 0, 0]) children(); }
+module MMy() { children(); mirror([0, 1, 0]) children(); } 
+module MMz() { children(); mirror([0, 0, 1]) children(); }
 
 module langloch(r=2.5,d=8,h=20)
 {

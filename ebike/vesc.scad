@@ -8,12 +8,15 @@ akkuLk=175;
 akkuHk=50;
 akkuB=69;
 akkuH=125;
+cbL=75;
+
 rund=6;
 wand=3;
 
 
 
-controllerbox();
+
+controllerbox(cbL);
 
 *Tx(28) Ty(-15) Tz(30) Ry(-90) 
 	vesc_holder();
@@ -61,23 +64,24 @@ module vesc_caps()
 	Rx(90) Ry(180) Tx(25) Ty(0) Tz(-20) import("Capacitors.stl");
 }
 
-module controllerbox() 
+module controllerbox(l) 
 {
-	l=akkuB*1.4; 
+	//l=akkuB*1.3; 
 	b=akkuB+2*rund+2*wand;
 	h=akkuH+rund+wand*2+wand;
+	schnittx=h/2*tan(4)-l/2+rund+30/2;
 	
 	// deckel abgerundet
 	D() {	
 	 rounded_box(l=l, b=b, h=h, r=rund, w=wand);
-		Ry(4)Tx(25)Cu(100,b*2,h*2);
+		Ry(4)Tx(-50+schnittx)Cu(100,b*2,h*2);
 		//Tz(-wand-1+40) Tx(-(akkuL+rund*2+akkuB*1.5-14)/2+100) Ty(-akkuB/3) Ry(90)  xt90();
 	}
 	
 	// unterteil abgerundet
 	Tx(0.4)D() {	
 		rounded_box(l=l, b=b, h=h, r=rund, w=wand);
-		Ry(4)Tx(-45)Cu(40,b*2,h*2);
+		Ry(4)Tx(50+schnittx-1)Cu(100,b*2,h*2);
 		// Loecher oben für Kabel
 		rloch=4;
 		rduenn=8;
