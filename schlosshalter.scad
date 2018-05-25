@@ -77,12 +77,15 @@ module klemmung(r, d)
 {
 rschl=r-1.5;
 len=15;
-a=11;
+d_schraube=10.5;
+a_mutter=8.5;
 rl=5/2;
-translate ([rschl+2, 5, len/2-a/2]) cube([a,a,a]);
-translate ([rschl+2, -5-a, len/2-a/2]) cube([a,a,a]);
+translate ([rschl+2, 6, len/2-a_mutter/2])
+	cube([a_mutter,a_mutter,a_mutter]);
+translate ([rschl+2+a_mutter/2-d_schraube/2, -6-d_schraube, len/2-d_schraube/2]) 
+	cube([d_schraube,d_schraube,d_schraube]);
 translate ([rschl-1, -d/2,-0.1]) cube([17,d,len+5]);
-translate ([rschl+2+a/2,0,len/2]) rotate([90,0,0]) cylinder(r=rl, h=40, center=true);
+translate ([rschl+2+a_mutter/2,0,len/2]) rotate([90,0,0]) cylinder(r=rl, h=40, center=true);
 }
 
 
