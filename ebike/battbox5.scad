@@ -39,10 +39,10 @@ $fn=80;
 
 D() {
 	U() {
-		akkubox();
+		*akkubox();
 
 		// Unterplatte -----------
-		Ty((akkuB+30)) Tz((wand+6)) { 
+		*Ty((akkuB+30)) Tz((wand+6)) { 
 			D() {
 				unterplatte();
 				Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
@@ -50,18 +50,20 @@ D() {
 		}
 
 		// Controllerbox --------
-		Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
+		*Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
 
 		// Halter ------------------------------
 		Tz(78) Tx(0) {
 			D() {
 				halter();
 				// Loecher für Flaschenhalterung
+				Tx(-31) Tz(-0.5) langloch(r=fhR*2.5, d=8, h=5);
 				Tx(-31) langloch(r=fhR, d=8, h=30);
+				Tx(-96) Tz(-0.5) langloch(r=fhR*2.5, d=8, h=5);
 				Tx(-96) langloch(r=fhR, d=8, h=30);
 //			// Ausschnitt für Sattelrohr
 				Tx(akkuL-akkuB/2-wand+1) Cu(akkuB+wand, r_sattel*2, 20);
-				Tx(akkuL-20+4) Cu(20, r_sattel*2+7, 20); // duennes wech
+				Tx(akkuL-27) Cu(20, r_sattel*2+7, 20); // duennes wech
 			}
 		}
 	}
@@ -73,88 +75,89 @@ Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
 
 module halter()
 {
-	schieneB=akkuB;
-	schieneL=15;
+	//ab_schieneB=akkuB;
+	ab_schieneB=akkuB+wand*3;
+	ab_schienel=30;
+	ab_schieneL=akkuL+wand*2;
 	blockL=10;
 	h=wand*3;
-	l=akkuL+wand*2;
-	block1x=blockL+wand;
-	block2x=l/2-schieneL/2;
-	block3x=l-(schieneL+blockL+wand);
 
-	h_up=wand*3;
 	l_up=akkuL+cbL+rund;
 	b_up=akkuB+2*rund+2*wand;
 
-	ls=70;
+	ls=cbL-2*r_sattel;
 	bs=akkuB;
-	hs=h_up;
-
+  
 	Rz(180) Tx(-cbL-rund*2)  {
 		I() { 
 		U() {
-			
-			AkkuboxSchieneAussen();
+			AkkuboxSchieneAussen(l=ab_schieneL, b=ab_schieneB);
 			// Block mit Ausschnitten
-			Tx((l_up-l)/2+rund*2) {
+			Tx((l_up-ab_schieneL)/2+rund*2) {
 				D() {
-					rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
-					Tx((l_up-l)/2+rund*2) Tz(-h_up/2+h/2-0.1) 
-						Cu(l, schieneB+wand*2, h*2);
-					Tx(-(l_up/2-ls/2)) Cu(ls,bs+wand,hs+10.1);
+					rounded_cube(l=l_up, h=h, b=b_up, r=rund/2);
+					Tx((l_up-ab_schieneL)/2+rund*2) Tz(-h/2+h/2-0.1) 
+						Cu(ab_schieneL, ab_schieneB-wand, h*2);
+					Tx(-(l_up/2-ls/2)) Cu(ls,ab_schieneB-2*wand,h+10.1);
 				}
-				ControllerboxSchieneAussen();
+				ControllerboxSchieneAussen(ls, ab_schieneB);
 			}
 		}
-		Tx((l_up-l)/2+rund*2) {
-			rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
+		Tx((l_up-ab_schieneL)/2+rund*2) {
+			rounded_cube(l=l_up, h=h, b=b_up, r=rund/2);
 			Tx(l_up/2+20/2)Cu(20,bs*0.9,h*2);
 		}
 	} // I()
 	}
-	module ControllerboxSchieneAussen()
+	
+	module ControllerboxSchieneAussen(l,b)
 	{
-		b=bs+wand*2;
-		Tx(-(l_up/2)+0.2) Tz(-hs+wand/2) {
+		Tx(-(l_up/2)+0.2) Tz(-h+wand/2) {
 			D() {
 			Rz(90) 
 			slide(
-				Slide_length = ls,
+				Slide_length = l,
 				Slide_width = b,
-				Slide_height=hs,
+				Slide_height=h,
 				View_parts = 5
 			);
-			Tx(ls/2) Ty(bs/2-6) Tz(2) Rx(+10) Cu(ls/2, 10, 10);
-			Tx(ls/2) Ty(-(bs/2-6)) Tz(2) Rx(-10) Cu(ls/2, 10, 10);
+			dy=9.8;
+			Tx(l/2) Ty(+(b/2-dy)) Tz(2) Rx(+10) Cu(l/2, 10, 10);
+			Tx(l/2) Ty(-(b/2-dy)) Tz(2) Rx(-10) Cu(l/2, 10, 10);
 			}
 		}
 	}
 	
-	module AkkuboxSchieneAussen()
+	module AkkuboxSchieneAussen(l,b)
 	{
+		block1x=blockL;
+		block2x=l/2-ab_schienel/2;
+		block3x=l-(ab_schienel+blockL+wand);
+
 		Rx(180) {
 			// Stop-Blöcke 
-			Tx(block1x-blockL/2) Cu(blockL,schieneB+wand*2, h);
-			Tx(block2x-blockL/2) Cu(blockL,schieneB+wand*2, h);
-			Tx(block3x-blockL/2) Cu(blockL,schieneB+wand*2, h);
+			Tx(block1x-blockL/2) Cu(blockL, b-wand, h);
+			Tx(block2x-blockL/2) Cu(blockL, b-wand, h);
+			Tx(block3x-blockL/2) Cu(blockL, b-wand, h);
 			D() {
-				T(l+1,0,h-1.7) R(180,0,90)
+				T(l-rund*2,0,h-1.7) R(180,0,90)
 					slide(
 						Slide_length = l,
-						Slide_width = schieneB+wand*3,
-						Slide_height=3*wand,
+						Slide_width = b,
+						Slide_height=h,
 						View_parts = 5
 					);
 				// Schienen anschraegen
-				l1=block2x-block1x-schieneL-blockL/2;
-				l2=block3x-block2x-schieneL-blockL/2;
-				l3=l-block3x--schieneL-blockL/2;
-				Tx(block1x+schieneL+l1/2) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l1, 10, 10);
-				Tx(block1x+schieneL+l1/2) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l1, 10, 10);
-				Tx(block2x+schieneL+l2/2+0.1) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l2, 10, 10);
-				Tx(block2x+schieneL+l2/2+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l2, 10, 10);
-				Tx(block3x+schieneL+l3/2+0.1) Ty(-schieneB/2+5) Tz(5) Rx(+10) Cu(l3, 10, 10);
-				Tx(block3x+schieneL+l3/2+0.1) Ty(+schieneB/2-5) Tz(5) Rx(-10) Cu(l3, 10, 10);
+				l1=block2x-block1x-ab_schienel-blockL/2;
+				l2=block3x-block2x-ab_schienel-blockL/2;
+				l3=l-block3x-ab_schienel-blockL/2;
+				dy=9.8;
+				Tx(block1x+ab_schienel+l1/2)     Ty(-(b/2-dy)) Tz(5) Rx(+10) Cu(l1, 10, 10);
+				Tx(block1x+ab_schienel+l1/2)     Ty(+(b/2-dy)) Tz(5) Rx(-10) Cu(l1, 10, 10);
+				Tx(block2x+ab_schienel+l2/2+0.1) Ty(-(b/2-dy)) Tz(5) Rx(+10) Cu(l2, 10, 10);
+				Tx(block2x+ab_schienel+l2/2+0.1) Ty(+(b/2-dy)) Tz(5) Rx(-10) Cu(l2, 10, 10);
+				Tx(block3x+ab_schienel+l3/2+0.1) Ty(-(b/2-dy)) Tz(5) Rx(+10) Cu(l3, 10, 10);
+				Tx(block3x+ab_schienel+l3/2+0.1) Ty(+(b/2-dy)) Tz(5) Rx(-10) Cu(l3, 10, 10);
 			}
 		}
 	}

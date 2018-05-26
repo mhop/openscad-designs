@@ -86,7 +86,7 @@ module controllerbox(l)
 	}
 	
 	// deckel abgerundet
-	Tx(0.4)D() {	
+	*Tx(0.4)D() {	
 		rounded_box(l=l, b=b, h=h, r=rund, w=wand);
 		Ry(4)Tx(50+schnittx-1)Cu(100,b*2,h*2);
 		// Loecher oben für Kabel
