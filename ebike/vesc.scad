@@ -1,29 +1,37 @@
+/*
+	ebike-Controllerbox
+
+    Autor: Marc Hoppe (mhop@posteo.de), Bielefeld 2018
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
 use <lib/shortcuts.scad>
 use <lib/box_complete.scad>;
 use <lib/mhop_lib.scad>
 
-akkuL=210;
-akkuLk=175;
-akkuHk=50;
-akkuB=69;
-akkuH=125;
-cbL=75;
-
-rund=6;
-wand=3;
-
-
+include <par.scad>;
 
 
 controllerbox(cbL);
 
-*Tx(28) Ty(-15) Tz(30) Ry(-90) 
+Tx(cbL/7) Ty(-10) Tz(30) Ry(-90) 
 	vesc_holder();
 
-Tx(44) Ty(-15) Tz(-28) Ry(90) 
+Tx(cbL/2-rund-wand) Ty(-15) Tz(-28) Ry(90) 
 	vesc_caps();
-Tx(30) Ty(-15) Tz(-28) Ry(90) 
+Tx(cbL/2-rund-wand-15) Ty(-15) Tz(-28) Ry(90) 
 	vesc_caps();
 
 
@@ -66,19 +74,18 @@ module vesc_caps()
 
 module controllerbox(l) 
 {
-	//l=akkuB*1.3; 
 	b=akkuB+2*rund+2*wand;
 	h=akkuH+rund+wand*2+wand;
-	schnittx=h/2*tan(4)-l/2+rund+30/2;
+  schnittx=h/2*tan(4)-l/2+rund+r_sattel;
 	
-	// deckel abgerundet
+	// unterteil abgerundet
 	D() {	
 	 rounded_box(l=l, b=b, h=h, r=rund, w=wand);
-		Ry(4)Tx(-50+schnittx)Cu(100,b*2,h*2);
+		Ry(4)Tx(-100/2+schnittx)Cu(100,b*2,h*2);
 		//Tz(-wand-1+40) Tx(-(akkuL+rund*2+akkuB*1.5-14)/2+100) Ty(-akkuB/3) Ry(90)  xt90();
 	}
 	
-	// unterteil abgerundet
+	// deckel abgerundet
 	Tx(0.4)D() {	
 		rounded_box(l=l, b=b, h=h, r=rund, w=wand);
 		Ry(4)Tx(50+schnittx-1)Cu(100,b*2,h*2);
@@ -91,39 +98,38 @@ module controllerbox(l)
 		Tx(18) Ty(b/4)  Tz(-h/2+6-(wand/2)) Cy(r=rduenn, h=5);
 		Tx(18) Ty(-b/4) Tz(-h/2+6-(wand/2)) Cy(r=rduenn, h=5);
 	}
-	*Tx(12) Ry(-90) vesc_box();
+	Tx(12) Ry(-90) vesc_box(schnittx);
 
 // Schloss
-Tx(-33) Ty(-33) Tz(50) Ry(180) Rx(-90) {
-	Cy(r=18/2, h=22);
-	Tz(20/2) Tx(47/2) Cu(47,18,2);
+Tx(-l/2+r_schloss+rund+2) Ty(-33) Tz(50) Ry(180) Rx(-90) {
+	Cy(r=r_schloss, h=22);
+	Tz(20/2) Tx(47/2) Cu(47,r_schloss*2,2);
 }
 
-	
 }
 
 
-module vesc_box()
+module vesc_box(schnittx)
 {
-	l=akkuB-wand; 
+	l=cbL-wand; 
 	b=akkuB+2*rund-wand;
 	h=akkuH+2*wand;
 
 	// Wasserdichte Box unten abgeschnitten
-	Tz(-3*l/8) D() {
-		//Tx(l/2+22) Ty(-39) Tz(-h/2+wand) Ry(0) Ry(-90)
-		mycontrollerbox(outbox=1,x=h, y=b, h=l);
-		Tz(-akkuH/2+l/4) Cu(akkuH*2,akkuH,akkuH);
+	Tz(schnittx-r_sattel-2*wand) {
+		D() {
+			mycontrollerbox(outbox=1,x=h, y=b, h=l);
+			Tz(-akkuH/2+l/4) Cu(akkuH*2,akkuH,akkuH);
+		}
+		// aussen verbreitern damit auf jeden fall mit aussenwand verbunden
+		dw=wand;
+		D() {
+			Tz(3*l/8) Cu(h+dw,b+dw,l/4+wand);
+			Tz(3*l/8+wand)Cu(h-2*dw,b-2*dw,l/4+dw+10);
+		}
+		// Deckel dazu
+		Tz(l/2+wand*1.5) mycontrollerbox(outlid=1,x=h, y=b, h=l);
 	}
-	// aussen verbreitern damit auf jeden fall mit aussenwand verbunden
-	dw=wand;
-	D() {
-		Cu(h+dw,b+dw,l/4+dw);
-		Tz(1)Cu(h-2*dw,b-2*dw,l/4+dw+10);
-	}
-
-	// Deckel dazu
-	*Tz(l/4.1-1)mycontrollerbox(outlid=1,x=h, y=b, h=l);
 
 	*U() {
 		 // Deckel
@@ -146,7 +152,7 @@ module vesc_box()
 module mycontrollerbox(outbox=0, outlid=0, x,y,h)
 {
 
-if(outbox) T(-x/2, -y/2, -(h+wand)/2)
+T(-x/2, -y/2, -(h+wand)/2)
 box_wp(
 	/* [Box Options] */
 	// Dimension: Box outer X-Size [mm]

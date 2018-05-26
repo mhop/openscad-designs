@@ -1,7 +1,7 @@
 /*
 	ebike-Akkubox
 
-    by Marc Hoppe (mhop@posteo.de), 2018
+    Autor: Marc Hoppe (mhop@posteo.de), Bielefeld 2018
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,16 +25,8 @@ use <lib/mhop_lib.scad>;
 use <xt90.scad>;
 use <rahmen.scad>;
 use <vesc.scad>;
-use <einschub.scad>;
 
-akkuL=210;
-akkuLk=175;
-akkuHk=50;
-akkuB=69;
-akkuH=125;
-rund=6;
-wand=3;
-cbL=75;
+include <par.scad>;
 
 view_ober=1;
 view_unter=0;
@@ -43,9 +35,10 @@ view_mitte=1;
 $fn=80;
 
 *Rx(180) Rz(180)akkuK();
-Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
-//D() {
-	{
+*Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
+
+D() {
+	U() {
 		akkubox();
 
 		// Unterplatte -----------
@@ -58,27 +51,23 @@ Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
 
 		// Controllerbox --------
 		Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
-		//Tx(l_up/2-l_einschub/2-75)Tz((akkuH/2+2*rund+h_up/2)-1) Rz(0)
-		//	einschub(l_up/2-l_einschub/2, 0, l_einschub, 30, h_up) 
-		//rounded_cube(l=l_up, h=h_up, b=b_up, r=rund/2);
 
 		// Halter ------------------------------
 		Tz(78) Tx(0) {
 			D() {
 				halter();
 				// Loecher für Flaschenhalterung
-				Tx(-31) langloch(r=3, d=8, h=30);
-				Tx(-96) langloch(r=3, d=8, h=30);
+				Tx(-31) langloch(r=fhR, d=8, h=30);
+				Tx(-96) langloch(r=fhR, d=8, h=30);
 //			// Ausschnitt für Sattelrohr
-				d_sattel=30.0;
-				Tx(akkuL-akkuB/2-wand+1) Cu(akkuB+wand, d_sattel, 20);
-				Tx(akkuL-20+4) Cu(20, d_sattel+7, 20); // duennes wech
+				Tx(akkuL-akkuB/2-wand+1) Cu(akkuB+wand, r_sattel*2, 20);
+				Tx(akkuL-20+4) Cu(20, r_sattel*2+7, 20); // duennes wech
 			}
 		}
 	}
 
 Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
-//} // D()...
+} // D()...
 
 // --------------------------------------------------------------
 
@@ -243,7 +232,6 @@ module akkubox()
 			Tz(40) Tx(97) Ty(-akkuB/4) Ry(90) 
 				Cy(r1=12, r2=23, h=20, center=true);
 		}
-		//Tz(40) Tx(100) Ty(-akkuB/3) Ry(90)  xt90();
 	}
 
 	module box_oben_ohne()
@@ -258,7 +246,7 @@ module akkubox()
 	{
 	Tz(-rund+2) 
 		D() {
-			rounded_box(l=akkuL+wand*2, b=akkuB+(rund+wand)*2, h=akkuH, r=rund, w=wand);
+			rounded_box(l=abL, b=abB, h=akkuH, r=rund, w=wand);
 			Tz(akkuH/2-rund)Cu([300,300,rund*2]);
 		}
 	}
@@ -267,31 +255,27 @@ module akkubox()
 
 module myroundedBox() 
 {
-
-	boxL=akkuL+wand*2;
-	boxB=akkuB+rund*2+wand*2;
-
-	T(boxL/2,boxB/2,0) ;
+	T(abL/2, abB/2,0) ;
 
 	module dbox()
 	{
-		dboxL=boxL+wand*2;
-		dboxB=boxB+wand*2;
+		dboxL=abL+wand*2;
+		dboxB=abB+wand*2;
 		T(dboxL/2-wand,dboxB/2-wand,-0) ;
 	}
 
 	D() {
 		mybox(outbox=1);
 		dbox();
-		//T(-0.1,-0.1,-0.1) Cu([akkuL*2,akkuB*2,wand*1.6]);
 	}
 }
 
 module mybox(outbox=0, outlid=0)
 {
-	x=akkuL+wand*2;
-	y=akkuB+rund*2+wand*2;
+	x=abL;
+	y=abB;
 	h=akkuH;
+	
 T(-x/2, -y/2, -(h+wand)/2)
 box_wp(
 	/* [Box Options] */

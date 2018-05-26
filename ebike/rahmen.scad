@@ -1,12 +1,12 @@
 
 use <lib/shortcuts.scad>
 
+include <par.scad>;
+
 rahmen();
 
 module rahmen()
 {
-	r_sattel=30.0/2;
-	r_ober=28.0/2;
 	rk=13.0/2;
 	strebZ=-rk;
 
