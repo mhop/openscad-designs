@@ -34,15 +34,15 @@ view_mitte=1;
 
 $fn=80;
 
-Rx(180) Rz(180)akkuK();
-*Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
+*Rx(180) Rz(180)akkuK();
+Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
 
 D() {
 	U() {
-		akkubox();
+		*akkubox();
 
 		// Unterplatte -----------
-		Ty((akkuB+30)) Tz((wand+6)) { 
+		*Ty((akkuB+30)) Tz((wand+6)) { 
 			D() {
 				unterplatte();
 				Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
@@ -50,7 +50,7 @@ D() {
 		}
 
 		// Controllerbox --------
-		Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
+		*Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
 
 		// Halter ------------------------------
 		Tz(78) Tx(0) {
@@ -75,8 +75,8 @@ Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
 
 module halter()
 {
-	//ab_schieneB=akkuB;
-	ab_schieneB=akkuB+wand*3;
+	ab_schieneB=akkuB/2;
+	cb_schieneB=akkuB+wand*3;
 	ab_schienel=30;
 	ab_schieneL=akkuL+wand*2;
 	blockL=10;
@@ -93,17 +93,25 @@ module halter()
 			U() {
 				AkkuboxSchieneAussen(l=ab_schieneL, b=ab_schieneB);
 				// Block mit Ausschnitten
-				Tx((l_up-ab_schieneL)/2+rund*2) {
+				Tx((l_up+50+-akkuL-wand*2)/2+rund*2) {
 					D() {
-						rounded_cube(l=l_up, h=h, b=b_up, r=rund/2);
-						Tx((l_up-ab_schieneL)/2+rund*2) Tz(-h/2+h/2-0.1) 
-							Cu(ab_schieneL, ab_schieneB-wand, h*2);
-						Tx(-(l_up/2-ls/2)) Cu(ls,ab_schieneB-2*wand,h+10.1);
+						rounded_cube(l=l_up+50, h=h, b=b_up, r=rund/2);
+						flasch_abstand=65;
+						Tx(ab_schieneB/3)
+					  Ty(wand+0.1) 	{
+						Tx(0) Tz(-h/2+h/2-0.1) 
+							Cu(ab_schieneB-wand, cb_schieneB+wand, h*2);
+						Tx(ab_schieneB*2) Tz(-h/2+h/2-0.1) 
+							Cu(ab_schieneB-wand, cb_schieneB+wand, h*2);
+						Tx(-ab_schieneB*2) Tz(-h/2+h/2-0.1) 
+							Cu(ab_schieneB-wand, cb_schieneB+wand, h*2);
+						}
+						Tx(-((l_up+50)/2-ls/2)) Cu(ls,cb_schieneB-2*wand,h+10.1);
 					}
-					ControllerboxSchieneAussen(ls, ab_schieneB);
+					ControllerboxSchieneAussen(ls, cb_schieneB);
 				}
 			}
-			Tx((l_up-ab_schieneL)/2+rund*2) {
+			*Tx((l_up-ab_schieneL)/2+rund*2) {
 				rounded_cube(l=l_up, h=h, b=b_up, r=rund/2);
 				Tx(l_up/2+20/4) Tz(wand)Cu(20,bs*0.9,wand);
 			}
@@ -136,18 +144,34 @@ module halter()
 
 		Rx(180) {
 			// Stop-Blöcke 
-			Tx(block1x-blockL/2) Cu(blockL, b-wand, h);
-			Tx(block2x-blockL/2) Cu(blockL, b-wand, h);
-			Tx(block3x-blockL/2) Cu(blockL, b-wand, h);
-			D() {
-				T(l-rund*2,0,h-1.7) R(180,0,90)
+			//Tx(block1x-blockL/2) Cu(blockL, b-wand, h);
+			//Tx(block2x-blockL/2) Cu(blockL, b-wand, h);
+			//Tx(block3x-blockL/2) Cu(blockL, b-wand, h);
+			//D() {
+			Tx(l-b-b/2) Ty(-akkuB/2-wand){
+				T(0,0,h-1.7) R(180,0,0)
 					slide(
-						Slide_length = l,
+						Slide_length = akkuB,
 						Slide_width = b,
 						Slide_height=h,
 						View_parts = 5
 					);
-				// Schienen anschraegen
+				T(-2*b,0,h-1.7) R(180,0,0)
+					slide(
+						Slide_length = akkuB,
+						Slide_width = b,
+						Slide_height=h,
+						View_parts = 5
+					);
+				T(-4*b,0,h-1.7) R(180,0,0)
+					slide(
+						Slide_length = akkuB,
+						Slide_width = b,
+						Slide_height=h,
+						View_parts = 5
+					);
+				}
+/*				// Schienen anschraegen
 				l1=block2x-block1x-ab_schienel-blockL/2;
 				l2=block3x-block2x-ab_schienel-blockL/2;
 				l3=l-block3x-ab_schienel-blockL/2;
@@ -158,7 +182,8 @@ module halter()
 				Tx(block2x+ab_schienel+l2/2+0.1) Ty(+(b/2-dy)) Tz(5) Rx(-10) Cu(l2, 10, 10);
 				Tx(block3x+ab_schienel+l3/2+0.1) Ty(-(b/2-dy)) Tz(5) Rx(+10) Cu(l3, 10, 10);
 				Tx(block3x+ab_schienel+l3/2+0.1) Ty(+(b/2-dy)) Tz(5) Rx(-10) Cu(l3, 10, 10);
-			}
+				*/
+			//}
 		}
 	}
 }
@@ -230,8 +255,10 @@ module akkubox()
 		U() {
 			box_oben_ohne();
 			oben_abrunden();
-			Tx(-akkuL/2-wand-akkuB/4) Tz(5) Ry(90) Rx(-90) 
-				henkel(L=akkuH*.9, H=akkuB/2, ri=akkuB/6, h=akkuB/3, b=3, rr=3);
+			Tx(-5) Tz(-88) Ry(0) Rx(-90) 
+				henkel_knick(L=akkuH, H=40, ri=akkuB/6, h=akkuB/3, b=3, rr=3);
+			*Tx(55) Tz(-85) Ry(0) Rx(-90) 
+				henkel(L=akkuH*0.8, H=akkuB, ri=akkuB/6, h=akkuB/3, b=3, rr=3);
 			Tz(40) Tx(97) Ty(-akkuB/4) Ry(90) 
 				Cy(r1=12, r2=23, h=20, center=true);
 		}

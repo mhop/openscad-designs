@@ -35,14 +35,14 @@ view_mitte=1;
 $fn=80;
 
 Rx(180) Rz(180)akkuK();
-*Tx(akkuL/2+17) Tz(akkuH/2+21) Rz(180) Rx(180) rahmen();
+Tx(akkuL/2+17) Tz(akkuH/2) Rz(180) Rx(180) Ry(0)rahmen();
 
-D() {
+*D() {
 	U() {
 		akkubox();
 
 		// Unterplatte -----------
-		Ty((akkuB+30)) Tz((wand+6)) { 
+		*Ty((akkuB+30)) Tz((wand+6)) { 
 			D() {
 				unterplatte();
 				Ty(-akkuB-akkuB/2+5) Tz(akkuH/2+6) Cu(akkuL, 12, 8);
@@ -50,10 +50,10 @@ D() {
 		}
 
 		// Controllerbox --------
-		Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
+		*Tz(wand+1) Tx((akkuL+rund*2+cbL-7)/2) controllerbox(l=cbL);
 
 		// Halter ------------------------------
-		Tz(78) Tx(0) {
+		*Tz(78) Tx(0) {
 			D() {
 				halter();
 				// Loecher für Flaschenhalterung

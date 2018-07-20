@@ -86,7 +86,7 @@ module controllerbox(l)
 	}
 	
 	// deckel abgerundet
-	*Tx(0.4)D() {	
+	Tx(0.4)D() {	
 		rounded_box(l=l, b=b, h=h, r=rund, w=wand);
 		Ry(4)Tx(50+schnittx-1)Cu(100,b*2,h*2);
 		// Loecher oben für Kabel
@@ -101,7 +101,7 @@ module controllerbox(l)
 	Tx(12) Ry(-90) vesc_box(schnittx);
 
 // Schloss
-Tx(-l/2+r_schloss+rund+2) Ty(-33) Tz(50) Ry(180) Rx(-90) {
+Tx(-l/2+r_schloss+rund+2) Ty(-33) Tz(+50) Ry(180) Rx(-90) {
 	Cy(r=r_schloss, h=22);
 	Tz(20/2) Tx(47/2) Cu(47,r_schloss*2,2);
 }
@@ -128,13 +128,13 @@ module vesc_box(schnittx)
 			Tz(3*l/8+wand)Cu(h-2*dw,b-2*dw,l/4+dw+10);
 		}
 		// Deckel dazu
-		Tz(l/2+wand*1.5) mycontrollerbox(outlid=1,x=h, y=b, h=l);
+		*Tz(l/2+wand*1.5) mycontrollerbox(outlid=1,x=h, y=b, h=l);
 	}
 
 	*U() {
 		 // Deckel
-		 Tx(-wand*3.5+6) Tz((akkuH+10)/2)Ty(-akkuB-39-22)Ry(90)
-			mycontrollerbox(outlid=1);
+		Tx(-wand*3.5+6) Tz((akkuH+10)/2)Ty(-akkuB-39-22)Ry(90)
+			mycontrollerbox(outlid=1, x=h, y=b, h=l);
 		h_xt90halter=38;
 		*Tx(-h_xt90halter+4*wand) Ty(-akkuB/2+10) Tz(akkuH/4+5) Ry(90) 
 			Cu(40, 25, h_xt90halter);

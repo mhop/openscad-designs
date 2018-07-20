@@ -1,5 +1,5 @@
 
-use<shortcuts.scad>
+use<lib/shortcuts.scad>
 
 // preview[view:northwest, tilt:bottomdiagonal]
 

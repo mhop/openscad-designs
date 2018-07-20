@@ -22,22 +22,31 @@ color("orange", 1.0) {
 
 // Sattelrohr
 rotate([0,4,0])
-translate([-r_sattel,0,-50])
-cylinder(r=r_sattel,h=400, center=1);
+translate([-r_sattel,0,-380])
+cylinder(r=r_sattel,h=650, center=1);
 // Oberrohr
 Tx(500) Tz(75)
 rotate([0,-70,0])
 cylinder(r=r_ober,h=600, center=1);
+// Unterrohr
+Tx(-40) Tz(-300)
+rotate([0,+70,0])
+cylinder(r=r_unter,h=900, center=1);
+
+// Tretlager
+Tx(-30) Ty(73/2) Tz(-300)
+rotate([90,0,0])
+cylinder(r=r_tret,h=73, center=1);
 
 	
 // Streben
 translate([-150,47,strebZ])
 rotate([0,90,-2.15])
-cylinder(r=rk,h=500,center=1);
+cylinder(r=rk,h=800,center=1);
 
 translate([-150,-47, strebZ])
 rotate([0,90,2.15])
-cylinder(r=rk,h=500, center=1);
+cylinder(r=rk,h=800, center=1);
 
 steg(x=-r_sattel/2, l=96);
 
