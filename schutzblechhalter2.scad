@@ -1,7 +1,7 @@
 /*
  Schutzblechhalter
  
-    by Marc Hoppe (mhop@posteo.de), 2018
+    Autor: Marc Hoppe (mhop@posteo.de), Bielefeld 2018
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
