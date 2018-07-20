@@ -22,7 +22,17 @@
 use <shortcuts.scad>
 
 *langloch();
-henkel();
+henkel_knick();
+*henkel_halb(	h=20,
+	b=5,
+	ri=10,
+	rr=2,
+	L=200,
+	H=50);
+*rounded_prism(10,5,2);
+*rounded_ring();
+
+
 
 module MMx() { children(); mirror([1, 0, 0]) children(); }
 module MMy() { children(); mirror([0, 1, 0]) children(); } 
@@ -65,6 +75,41 @@ module rounded_cube(l,b,h,r=0.1)
 	}
 }
 
+module rounded_trapez(l1,b1,l2,b2,h,r=0.1)
+{
+	//T(-l/2+r, -b/2+r, -h/2+r) 
+	{ 
+		d=2*r;
+		
+		hull() {
+			Sp(r=r);
+			Tx(l-d) Sp(r=r);
+			Ty(b-d) Sp(r=r);
+			Ty(b-d) Tx(l-d) Sp(r=r);
+			Tz(h-d) Sp(r=r);
+			Tz(h-d) Tx(l-d) Sp(r=r);
+			Tz(h-d) Ty(b-d) Sp(r=r);
+			Tz(h-d) Ty(b-d) Tx(l-d) Sp(r=r);
+		}
+	}
+}
+
+module rounded_prism(a,b,h,r=0.1)
+{
+	//T(-a/2+r, -b/2+r, -h/2+r) 
+	{ 
+		d=2*r;
+		hull() {
+			Sp(r=r);
+			Tx(a-d) Sp(r=r);
+			Ty(b-d) Sp(r=r);
+			Tz(h-d) Sp(r=r);
+			Tz(h-d) Tx(a-d) Sp(r=r);
+			Tz(h-d) Ty(b-d) Sp(r=r);
+		}
+	}
+}
+
 module zeppelin(r=5,h=20)
 {
 	Tz(h/2-r)    Sp(r=r);
@@ -90,6 +135,30 @@ module henkel(
 	}
 }
 
+module henkel_knick(
+	h=25,
+	b=8,
+	ri=10,
+	rr=2,
+	L=200,
+	H=40,
+  w=20
+)
+{
+	hm=H-ri-b-2*rr;
+	D() {
+	U() {
+	Ty(hm-H/2) {
+	Tx(L/2-b-ri-2*rr)henkel_halb(h,b,ri,rr,L,H);
+	Rz(w) Mx(1)
+		Tx(L/2-b-ri-2*rr)henkel_halb(h,b,ri,rr,L,H);
+  Ty() Rz(90)rounded_ring(ri=ri, h=h, b=b, rr=rr, w=w);
+	}
+}
+	Ty(-L/2-H/2) Rx(-90) Cy(r=L, h=L);
+}
+}
+
 module henkel_halb(h,b,ri,rr,L,H)
 	{
 	lm=L-2*ri-4*rr-2*b;
@@ -103,11 +172,12 @@ module henkel_halb(h,b,ri,rr,L,H)
 		rounded_block(h=h, b=b, l=hm, rr=rr);
 	}
 
+
 module rounded_ring(ri=100, h=50, b=10, rr=10, w=360)
 {
 	r=ri+rr/2;
 	Tz(-h/2)
-rotate_extrude(convexity = 10, angle=w) 
+rotate_extrude(angle=w) 
 	Tx(r) { 
 		Ci(r = rr) ;
 		Ty(h) Ci(r=rr);

@@ -14,8 +14,8 @@ use <mhop_lib.scad>
 slide();
 
 module slide(
-Slide_length = 160    ,
-Slide_width = 69     ,
+Slide_length = 60    ,
+Slide_width = 45     ,
 Slide_height=9,
 clearance = 0.1      ,//Clearance gap between parts... 0.1 default, 
 //Viewing Parameters
@@ -29,7 +29,7 @@ carriage_length= Slide_length;
 
 /////..Below Calculations ..////
 r=Slide_height*0.15;//ratio for size of radius
-podfcl=Slide_width*0.3;//position of dovtail from center line
+podfcl=Slide_width*0.22;//position of dovtail from center line
 rfbt=(Slide_height)/3;//ratio for base thickness
 bcr=Slide_height*1.9625;//blue circle radius
 
@@ -50,7 +50,7 @@ module left_hand_rail()
 difference()
 	{
     rotate(a=-60, v=[0,0,1])
-    square([Slide_height*3,Slide_width*0.15],center=true);
+    square([Slide_height*3,Slide_width*0.22-2],center=true);
     translate([0,(Slide_height*1.5)-r,0]) square([Slide_width,Slide_height*2],center=true);
     translate([0,-(Slide_height*1.5)+r,0]) square([Slide_width,Slide_height*2],center=true);
      }
@@ -174,13 +174,14 @@ module move_carriage ()
 
 module move_carriage_clip ()
 {
-	color("Green") {
+	//color("Green") 
+	{
 		D(){
 			U() { 
 				Tz(Slide_height/2) rotate(a=90,v=[1,0,0])
 					linear_extrude(0,0,carriage_length) top_rail_chamfered();
 				// Clip
-				Tz(Slide_height+Slide_height/6) Ty(5)
+				Tz(Slide_height+Slide_height/6-0.1) Ty(5)
 					rounded_cube(Slide_width*0.77, 15, Slide_height/3,r/2);
 		// Haken
 		Ty(-7) Tz(7*Slide_height/6) Tx(Slide_width/3-1.5) I() { 
