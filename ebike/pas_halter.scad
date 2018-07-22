@@ -17,10 +17,10 @@ r_loch=3.5/2;
 module rohr() {
 	color("orange", 1.0) {
 
-	Ry(5) D() {
+	Ry(8) D() {
 		hull() {
-			Tz(+16) Sy(1.2)Cy(r=r_rohr-1, h=0.1);
-			Tz(-16) Sy(1.05)  Cy(r=r_rohr-1, h=0.1);
+			Tz(+18) Sy(1.3)Cy(r=r_rohr-1, h=0.1);
+			Tz(-17) Sy(1.15)  Cy(r=r_rohr-1, h=0.1);
 		}
 		Tx(11.5) Tz(15)Cy(r=r_delle, h=30);
 		}
@@ -36,11 +36,11 @@ module rohr() {
 module block()
 	{
 		D() {
-			Tx(8) Ty(6) rounded_cube(10+5,50,30, r=1);
+			Tx(8) Ty(6) rounded_cube(10+6,50,30, r=1);
 			Tx(13.5) Ty(5)Cu(7,42,12);
 			//Tx(13) Tz(10) Cu(7,35,10);
 			Tx(8) Ty(21) Tz(-9) Rx(-26) Ry(20) Cy(r=r_kabel, h=26.5);
-			Tx(0.5) Tz(10) Sy(1.2) rounded_ring(ri=r_rohr+2, h=5, b=1.5, rr=0.1);
+			Tx(3) Tz(10) Sy(1.2) rounded_ring(ri=r_rohr+2, h=5, b=1.5, rr=0.1);
 			Tx(0) Tz(-9) Sy(1.2) rounded_ring(ri=r_rohr+2, h=5, b=1.5, rr=0.1);
 			Ry(90) Cy(r=r_loch, h=40);
 			Ty(13.5) Ry(90) Cy(r=r_loch, h=40);
@@ -61,7 +61,7 @@ module block()
 *Tx(15) Ry(90) Rz(90) pasMount();
 
 D() {
-Tx(-1)block();
+Tx(-3)block();
 rohr();
 
 }
