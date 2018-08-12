@@ -67,7 +67,7 @@ module help_shortcuts()
    CyS(r=10, h=1, w1=0, w2=90,center=true, d=undef) or Pie(...) or cylinder_sector(...): cylinder sector from angle w1 to w2<br>
    CyR(r=10, h=10, r_=1, d=undef, r1=undef, r2=undef, d1=undef, d2=undef, center=false) or cylinder_rounded(...): like cylinder() with rounded end faces <br>
    Cu(x=10, y=undef, z=undef, center=true): a cube with sides x,y,z; alternatively cube([x,y,z]) and cube(x) allowed<br>
-   CuR(x = 10, y = undef, z = undef, r = 0, center = true) or cube_rounded(size, r=0, center=false): cube with rounded vertices<br>
+   CuR(x = 10, y = undef, z = undef, r = 1, center = true) or cube_rounded(size, r=0, center=false): cube with rounded vertices<br>
    Ri(R=10, r=5, h=1, center=true, D=undef, d=undef): ring<br>
    RiH(R=10, r=5, h=1, w=0 center=true, D=undef, d=undef) or ring_half(...) half ring rotated by w<br>
    RiS(R=10, r=5, h=1, w1=0, w2=90, center=true, D=undef, d=undef) or ring_sector(): ring sector from w1 to w2<br>
@@ -152,11 +152,11 @@ module Cy(r = 10, h = 1, center = true, r1 = undef, r2=undef, d=undef, d1=undef,
 module Cu(x = 10, y = undef, z = undef, center = true)
   cube(x[0] == undef?[x, y?y:x, y?z?z:1:x]:x, center=center); 
 
-module CuR(x = 10, y = undef, z = undef, r = 0, center = true)
+module CuR(x = 10, y = undef, z = undef, r = 1, center = true)
   cube_rounded(x[0] == undef?[x, y?y:x, y?z?z:1:x]:x, r=r, center=center); 
 
 module CyR(r = 10, h=10, r_=1, d = undef, r1=undef, r2=undef, d1 = undef, d2 = undef, center=false)  
-  cylinder_rounded(r, h, r, d, r1, r2, d1, d2, center); 
+  cylinder_rounded(r, h, r_, d, r1, r2, d1, d2, center); 
 
 // derived primitives - 3d
 module CyH(r = 10, h = 1, center = true, r1 = undef, r2=undef, d=undef, d1=undef, d2=undef)
@@ -283,7 +283,7 @@ module cylinder_rounded(r=10, h=10, r_=1, d=undef, r1=undef, r2=undef, d1=undef,
   r2 = r2==undef?d2==undef?d==undef?r:d/2:d2/2:r2;
   r_ = min(abs(h/4), abs(r1), abs(r2), abs(r_));
   h = abs(h);
-  Tz(center?-h/2:0) rotate_extrude() I()
+  Tz(center?0:-h/2) rotate_extrude() I()
   {
     offset(r_)offset(-r_) polygon([[-2*r_,0], [r1, 0], [r2, h], [0,h], [-2*r_,h]] );
     Sq(max(r1,r2), h, 0);
