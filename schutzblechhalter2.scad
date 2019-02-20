@@ -41,6 +41,7 @@ fest_d_langloch=fest_h-fest_r_langloch*5;
 
 wk=(180-klam_w)/2;
 
+// henkel
 MMx() 
 {
 Tx(-klam_b/2-3) 
@@ -61,8 +62,10 @@ henkel_halb(
 D() {
 	U() {
 		scale([1, klam_scaleVert, 1]) rundung();
-		Ty(fest_h/2) Tz(klam_b/2-fest_dick/2)   rounded_cube(klam_b, fest_h, fest_dick, r=1);
-		Ty(4/2-0.2) rounded_cube(klam_b, 4, klam_b, r=1);
+		Ty(fest_h/2) Tz(klam_b/2-fest_dick/2+0.5)   rounded_cube(klam_b, fest_h, fest_dick, r=1);
+		Ty(4/2-0.2) rounded_cube(klam_b, 4, klam_b+1, r=1);
+        Ty(fest_h-3/2) rounded_cube(fest_r_langloch*6/4, 3, fest_r_langloch*3, r=1);
+        Tz(+klam_b/2-1) Ty(-3/2+0.5)  Rx(90) Cy(r=1.5, h=3);
 	}
 	Ty(fest_h/2+1) Rz(90) langloch(r=fest_r_langloch, d=fest_d_langloch, h=2*klam_b);
 }

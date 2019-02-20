@@ -31,6 +31,10 @@ use <shortcuts.scad>
 	H=50);
 *rounded_prism(10,5,2);
 *rounded_ring();
+rounded_trapez();
+*loch_senk();
+*rohrbogen();
+$fn=50;
 
 
 
@@ -38,10 +42,17 @@ module MMx() { children(); mirror([1, 0, 0]) children(); }
 module MMy() { children(); mirror([0, 1, 0]) children(); } 
 module MMz() { children(); mirror([0, 0, 1]) children(); }
 
+module loch_senk(r=1.5)
+{
+    h=r;
+    Cy(r1=r, r2=2*r, h=h);
+    Tz(-h+0.1)Cy(r=r, h=h);
+}
+
 module langloch_senk(r=2.5,d=8,h=20)
 {
 	hull() {
-	Tx(-d/2) Cy(r1=r, r2=2*r, h=h);
+	Tx(-d/2) Cy(r1=r, r2=2*r+0.1, h=h+0.1);
 	Tx(+d/2) Cy(r1=r, r2=2*r, h=h);
 	}
 }
@@ -83,23 +94,14 @@ module rounded_cube(l,b,h,r=0.1)
 	}
 }
 
-module rounded_trapez(l1,b1,l2,b2,h,r=0.1)
+module rounded_trapez(l1=15,l2=10,b1=8,b2=5,h=5,r=1)
 {
-	//T(-l/2+r, -b/2+r, -h/2+r) 
-	{ 
-		d=2*r;
-		
-		hull() {
-			Sp(r=r);
-			Tx(l-d) Sp(r=r);
-			Ty(b-d) Sp(r=r);
-			Ty(b-d) Tx(l-d) Sp(r=r);
-			Tz(h-d) Sp(r=r);
-			Tz(h-d) Tx(l-d) Sp(r=r);
-			Tz(h-d) Ty(b-d) Sp(r=r);
-			Tz(h-d) Ty(b-d) Tx(l-d) Sp(r=r);
-		}
-	}
+    hull() MMy() {
+        T(-(l1/2-r), +(b1/2-r),    -(h/2-r))   Sp(r=r);
+        T(+l1/2-r,   +(b1/2-r),    -(h/2-r))   Sp(r=r);
+        T(-(l2/2-r), +(b2/2-r),    h/2-r) Sp(r=r);
+        T(+l2/2-r,   +(b2/2-r),    h/2-r) Sp(r=r);
+    }
 }
 
 module rounded_prism(a,b,h,r=0.1)
@@ -180,6 +182,14 @@ module henkel_halb(h,b,ri,rr,L,H)
 		rounded_block(h=h, b=b, l=hm, rr=rr);
 	}
 
+module rohrbogen(r=5, w=30)
+{
+    Tx(-r)
+rotate_extrude(angle=w) 
+    Tx(r) { 
+        Ci(r = r) ;
+    }
+}
 
 module rounded_ring(ri=100, h=50, b=10, rr=10, w=360)
 {
@@ -204,12 +214,12 @@ module rounded_block(l=100, h=50, b=10, rr=10)
 	Rx(90) Ry(90) Tx(-b/2) Tz(-l/2) Ty(-h/2) 
 	linear_extrude(height=l) 
 	{ 
-		Ci(r = rr) ;
-		Ty(h) Ci(r=rr);
-		Tx(b) Ci(r=rr);
-		Tx(b) Ty(h) Ci(r=rr);
-		Tx(b/2) Ty(h/2) square([b,2*rr+h], center=true);
-		Tx(b/2) Ty(h/2) square([b+2*rr,h], center=true);
+		Tx(rr) Ty(rr) Ci(r = rr) ;
+		Tx(rr) Ty(h-rr) Ci(r=rr);
+		Tx(b-rr) Tx(rr) Ci(r=rr);
+		Tx(b-rr) Ty(h-rr) Ci(r=rr);
+		Tx(b/2) Ty(h/2) square([b-2*rr,h], center=true);
+		Tx(b/2) Ty(h/2) square([b,h-2*rr], center=true);
 		
 		
 		}
