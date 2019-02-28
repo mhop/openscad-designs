@@ -2,11 +2,15 @@
 
 // akku
 akkuL=210;
-//akkuL=260;
 akkuLk=175;
 akkuHk=50;
 akkuB=69;
 akkuH=125;
+
+akku2L=260;
+akku2H=120;
+akku2B=70;
+
 //akkuH=135;
 
 // allgemein
@@ -20,6 +24,7 @@ cbL=85;
 abL=akkuL+wand*2;
 abB=akkuB+(rund+wand)*2;
 abH=akkuH;
+
 
 // Flaschenhalter
 fhR=3;

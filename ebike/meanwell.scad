@@ -51,7 +51,7 @@ r_loch=4/2;
 h_loch=7;
 
 dome_r=r_loch+1.2;
-dome_h=roll_h-disp_h2+d-0.2;
+dome_h=4+d-0.2;
 
 kabel_d=8;
 kabel_x=70;
@@ -59,7 +59,6 @@ kabel_y=b-21;
 kabel2_d=6;
 kabel_d2=13;
 kabel_h2=2.5;
-
 kabel_e_x=a/2;
 kabel_e_y=18;
 kabel_e_d=9;
@@ -79,7 +78,8 @@ w=80;
 seite_ausgang();
 *seite_eingang();
 
-*Tz(dome_h) display(); 
+disp_y=-b/2+disp_b2/2+d+0.5;
+Ty(disp_y) Tz(dome_h+(disp_h2-disp_h)/2) display(); 
 
 module display()
 {
@@ -113,7 +113,7 @@ module seite_ausgang()
             basis();
             schraubendome();
             h=1;
-            Tx(-a/2+kabel_x) Ty(-b/2+kabel_y) Tz(h/2+d/2) Cy(r=kabel_e_d2/2+1, h=h);
+            *Tx(-a/2+kabel_x) Ty(-b/2+kabel_y) Tz(h/2+d/2) Cy(r=kabel_e_d2/2+1, h=h);
         }
         ausgang_kabel();
     }
@@ -123,13 +123,13 @@ module schraubendome()
 {
    // Schraubendome
     MMx() {
-        Tx(disp_d_loch/2) Tz(roll_h-aus_h/2)
-        Tz(-(disp_h-d)) D() {
+        Tx(disp_d_loch/2) Ty(disp_y) Tz(dome_h/2)
+        D() {
             U() {
-                Cy(r=dome_r, h=dome_h);
+                #[ 0.00, 0.00, 0.00 ]Cy(r=dome_r, h=dome_h);
                 Tx(dome_r+2/2) Cu(dome_r*2+2, dome_r*2, dome_h);
                 h=dome_h*4/5;
-                Tx(dome_r) Ty(+dome_r) Tz(-(dome_h-h)/2) Cu(dome_r*4, aus_b-dome_r*2, h);
+                *Tx(dome_r) Ty(+dome_r) Tz(-(dome_h-h)/2) Cu(dome_r*4, aus_b-dome_r*2, h);
             }
             Tz((dome_h-h_loch-d)/2+1.1) Cy(r=r_loch, h=h_loch);
         }
@@ -139,12 +139,12 @@ module schraubendome()
 module ausgang_kabel()
 {
     Tx(kabel_x-a/2) Ty(kabel_y-b/2)  Tz(-11+kabel_h2-0.1) {
-        Cy(r=kabel_d/2, h=20);
-        Tx(-10*sin(w)-kabel_d*cos(w)) Tz(10+kabel_d/2+kabel_d*cos(w)) Ry(-w) Cy(r=kabel_d/2, h=20);
-        Tz(10) Rx(90) rohrbogen(r=kabel_d/2, w=w);
-        Tz(10-kabel_h2/2) Cy(r=kabel_d2/2, h=kabel_h2);
+        *Cy(r=kabel_d/2, h=20);
+        *Tx(-10*sin(w)-kabel_d*cos(w)) Tz(10+kabel_d/2+kabel_d*cos(w)) Ry(-w) Cy(r=kabel_d/2, h=20);
+        *Tz(10) Rx(90) rohrbogen(r=kabel_d/2, w=w);
+        #Tz(10-kabel_h2/2) Cy(r=kabel_d2/2, h=kabel_h2);
     }
-    My()Tx(-15) Ty(-6) Tz(kabel2_d*2/3)  Rz(25) Ry(90) Cy(r=kabel2_d/2, h=20);
+    *My()Tx(-15) Ty(-6) Tz(kabel2_d*2/3)  Rz(25) Ry(90) Cy(r=kabel2_d/2, h=20);
 }
 
 module eingang_kabel()
@@ -158,19 +158,23 @@ module eingang_kabel()
 
 module basis() 
 {
+            h_kasten=dome_h+disp_h;
+            b_kasten=b/3*2+3;
     D() {
         U() {
             // Bleche
             CuR(a, b, d, r=0.8);
-            Ty(-b/2+d/2) Tz(h/2-d/2) CuR(a-20, d, h, r=0.5);
+            *Ty(-b/2+d/2) Tz(h/2-d/2) CuR(a-20, d, h, r=0.5);
+            Ty(-(b-b_kasten)/2) Tz(h_kasten/2) CuR(a-20, b_kasten, h_kasten, r=0.5);
             // Aufroller
-            MMx() Tx(roll_d/2) Tz(10) Cy(r=r, h=roll_h);
-            Tz(10)                    Cu(roll_d, 2*r, roll_h);
+            *MMx() Tx(roll_d/2) Tz(10) Cy(r=r, h=roll_h);
+            *Tz(10)                    Cu(roll_d, 2*r, roll_h);
         }
+        Ty(-(b-b_kasten)/2) Tz(h_kasten/2+d/2-d/4+0.1) CuR(a-20-d*2, b_kasten-d*2, h_kasten-d/2, r=0.5);
         // Ausschnitt voltmeter
-        Ty(0) Tz(roll_h-aus_h/2+0.1) Cu(aus_l, aus_b, aus_h);
+        *Ty(0) Tz(roll_h-aus_h/2+0.1) Cu(aus_l, aus_b, aus_h);
         // Schraubenlöcher
-        MMx() Tx(roll_d/2) Tz(roll_h-h_loch/2+0.1) Cy(r=r_loch, h=h_loch);
+        *MMx() Tx(roll_d/2) Tz(roll_h-h_loch/2+0.1) Cy(r=r_loch, h=h_loch);
         // Löcher gehäuseschrauben
         MMx() Tx(geh_dx/2) Ty(geh_dy/2) Cy(r=geh_r, h=2*d);
         MMx() Tx(geh_dx2/2) Ty(-geh_dy/2) Cy(r=geh_r, h=2*d);

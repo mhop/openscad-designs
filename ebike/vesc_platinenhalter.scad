@@ -18,11 +18,11 @@ x_dimension=39;
 y_dimension=65.3;
 spring_height=2;
 //gap_under_board=3;
-gap_under_board=35;
-gap_under_board_2=10;
+gap_under_board=40;
+gap_under_board_2=15;
 corner_support=0; // [1=support 0=no support]
-board_thickness=1.8;
-topoffset=15;
+board_thickness=2.2;
+topoffset=2;
 rtopoffset=3.2/2;
 
 
@@ -56,7 +56,7 @@ offr=8;
 	}
 }
 
-MMy() {
+*MMy() {
 	Ty((-y_dimension+y_dimension_2-Tab_Width/2)/2) Tz(gap_under_board-gap_under_board_3) {
 		Rx(0)	D() {
 			Cu(x_dimension, y_dimension_2, spring_height);
@@ -71,8 +71,8 @@ translate([0,+(y_dimension/2)+Tab_Width/2,0]) rotate([0,0,180]) tab();
 
 D() { 
 	spring_mount ();
-	MMx() Tx(x_dimension/2+y_thick+1.2) Cu(5,100,10);
-	MMy() Ty(y_dimension/2+y_thick+1.2) Cu(100,5,10);
+	MMx() Tx(x_dimension/2+y_thick+2) Cu(5,100,200);
+	MMy() Ty(y_dimension/2+y_thick+2) Cu(100,5,200);
 MMy() Ty(-(y_dimension/2)-Tab_Width/2+8) Tz(3) cylinder(h=Tab_Height*3+7, d1=fixing_hole_size, d2=fixing_hole_size, center=true,$fn=60);
 }
 
@@ -116,7 +116,7 @@ $vpr = [60, 0, 345];//cnc view point
 module holes_grid (holesX,holesY,X_Space,Y_Space,holeDiameter,thickness,){
       for (i=[0:holesX-1]) {
         for (j=[0:holesY-1]) {
-	 	translate([X_Space*i,Y_Space*j,thickness/2-.1]) Cu(holeDiameter*2/3,holeDiameter*2/3,thickness+0.2, center=true);
+	 	translate([X_Space*i,Y_Space*j,-.1]) cylinder(d=holeDiameter,h=thickness+0.2);
     }
   }
 }
