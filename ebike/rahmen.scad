@@ -1,9 +1,38 @@
 
 use <lib/shortcuts.scad>
+use <../weld.scad>
 
 include <par.scad>;
 
-rahmen();
+//rahmen();
+
+tret();
+
+module tret(weld=5) {
+	color("lightyellow", 1.0) {
+		l=200;
+//weld(weld) {
+	// Sattelrohr
+	Ry(270-w_sattel) Tz(-l/2) Cy(r=r_sattel_muf,h=l);
+
+	// Unterrohr
+	Ry(270-w_unter) Tz(-l/2)Cy(r=r_unter_muf,h=l);
+
+	// Tretlager
+	Rx(90) Cy(r=r_tret, h=b_tret);
+
+    // Kettenstreben
+	Rz(-5) Ry(270-w_kett) Ty(+16) Tz(l/2)Cy(r=r_kett_muf, h=l);
+	Rz(+5) Ry(270-w_kett) Ty(-16) Tz(l/2)Cy(r=r_kett_muf, h=l);
+    // STEG
+	Tx(-100) Tz(8) Rx(90) Cy(r=r_steg, h=50);
+	//Tx(-25) Cu(5,10,5);
+//}
+		
+Ty((b_tret/2-l_tret_loch1)) Ry(w_tret_loch) Cy(r=r_tret_loch, h=60);
+Ty((b_tret/2-l_tret_loch2)) Ry(w_tret_loch+10) Cy(r=r_tret_loch, h=60);
+	} // color
+}
 
 module rahmen()
 {

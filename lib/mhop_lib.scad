@@ -29,9 +29,9 @@ use <shortcuts.scad>
 	rr=2,
 	L=200,
 	H=50);
-*rounded_prism(10,5,2);
+rounded_prism(10,5,2, r=1);
 *rounded_ring();
-rounded_trapez();
+*rounded_trapez();
 *loch_senk();
 *rohrbogen();
 $fn=50;
@@ -107,6 +107,7 @@ module rounded_trapez(l1=15,l2=10,b1=8,b2=5,h=5,r=1)
 module rounded_prism(a,b,h,r=0.1)
 {
 	//T(-a/2+r, -b/2+r, -h/2+r) 
+	T(r, r, r) 
 	{ 
 		d=2*r;
 		hull() {
