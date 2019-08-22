@@ -51,7 +51,7 @@ r_kett_muf=26/2+0.5;
 gap_kett_muf=10;
 w_kett=355;
 
-r_tret=41/2+0.5;
+r_tret=41/2+0.5+2;
 b_tret=71;
 l_tret_loch1=31+3;
 l_tret_loch2=45+1;
@@ -59,6 +59,8 @@ r_tret_loch=4.5/2;
 w_tret_loch=-w_unter-(w_kett-w_unter)/2-10;
 
 r_steg=20/2;
+//r_blech=780/2;
+r_blech=820/2;
 
 
 r_schloss=18/2;

@@ -5,31 +5,60 @@ use <lib/box_complete.scad>;
 
 include <par.scad>;
 use <rahmen.scad>;
-use <vesc_platinenhalter.scad>;
+use <vesc_schraubdome.scad>;
 
 $fn=90;
 
+x=150;
+y=70;
+h=60;
 
+*tret();
+*myboxCtrl();
+mybox();
 
-tret();
-
-*box();
-
-Tx(-100) Tz(75) Rz(90) Rx(90) vesc_platinenhalter();
-
-D() {
-myboxCtrl();
-    Tx(-75) Cu(10, 150, 150);
+module mybox()
+{
+    D() {
+        myboxout();
+        myboxin();
+        Tx(-100) Ty(65) Tz(100) Cu(200,80,200);
+        *Tx(-120) Ty(65) Tz(100) Cu(80,200,200);
+    }
 }
 
+module myboxout()
+{
+    D() {
+        myboxraw();
+        tret(r_off=0);
+    }
+}
+
+module myboxin()
+{
+    d=4;
+    D() {
+        T(-d,0,d) S((60-d)/60, (60-d)/60, (80-d)/80) myboxraw();
+        Tx(0) tret(r_off=d);
+    }
+}
+
+module myboxraw()
+{
+    r=1;
+
+    hull() MMy() 
+    {
+        Tx(-85)  Ty(35) Tz(17)  Sp(r=r);
+        Tx(-5)   Ty(25) Tz(15)  Sp(r=r);
+        Tx(-125) Ty(35) Tz(170) Sp(r=r);
+        Tx(-50)  Ty(25) Tz(150) Sp(r=r);
+    }
+}
 
 module myboxCtrl(outbox=1, outlid=0)
 {
-	x=150;
-	y=100;
-	h=70;
-    
-	
 T(-x/2, -y/2, -(h+wand*2)/2)
 box_wp(
 	/* [Box Options] */
@@ -49,18 +78,6 @@ box_wp(
 	box_Wall_Thickness     =  wand, // [0.4:0.2:3.2]
 	outbox=outbox, outlid=outlid
 );
-}
-
-module box()
-{
-	D()  {
-		// Rahmenrohre
-		tret();
-	}
-}
-
-module wech()
-{
 }
 
 

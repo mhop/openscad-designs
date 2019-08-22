@@ -4,33 +4,50 @@ use <../weld.scad>
 
 include <par.scad>;
 
-//rahmen();
+*rahmen();
 
 tret();
 
-module tret(weld=5) {
+
+*U() {
+Tx(-25) Tz(-20) Cu(5,60,5);
+Tx(-95) Tz(-20) Cu(5,80,5);
+Tx(-60) Tz(-20) Cu(75,5,5);
+Tx(-70) Tz(150) Ry(270-w_sattel) Cu(5,5,270);
+Tx(-79) Tz(120) Ry(-12) Cu(50,5,5);
+}
+
+module tret(weld=5, r_off=0) {
 	color("lightyellow", 1.0) {
 		l=200;
 //weld(weld) {
 	// Sattelrohr
-	Ry(270-w_sattel) Tz(-l/2) Cy(r=r_sattel_muf,h=l);
+	Ry(270-w_sattel) Tz(-2*l/2) Cy(r=r_sattel_muf+r_off,h=2*l);
 
 	// Unterrohr
-	Ry(270-w_unter) Tz(-l/2)Cy(r=r_unter_muf,h=l);
+	Ry(270-w_unter) Tz(-l/2)Cy(r=r_unter_muf+r_off,h=l);
 
 	// Tretlager
-	Rx(90) Cy(r=r_tret, h=b_tret);
+	Rx(90) Cy(r=r_tret+r_off, h=b_tret);
 
     // Kettenstreben
-	Rz(-5) Ry(270-w_kett) Ty(+16) Tz(l/2)Cy(r=r_kett_muf, h=l);
-	Rz(+5) Ry(270-w_kett) Ty(-16) Tz(l/2)Cy(r=r_kett_muf, h=l);
+	Rz(-6) Ry(270-w_kett) Ty(+16) Tz(l/2)Cy(r=r_kett_muf+r_off, h=l);
+	Rz(+6) Ry(270-w_kett) Ty(-16) Tz(l/2)Cy(r=r_kett_muf+r_off, h=l);
     // STEG
-	Tx(-100) Tz(8) Rx(90) Cy(r=r_steg, h=50);
+    steg_x=-95;
+	Tx(steg_x) Tz(8) Rx(90) Cy(r=r_steg+r_off, h=50);
 	//Tx(-25) Cu(5,10,5);
 //}
-		
-Ty((b_tret/2-l_tret_loch1)) Ry(w_tret_loch) Cy(r=r_tret_loch, h=60);
-Ty((b_tret/2-l_tret_loch2)) Ry(w_tret_loch+10) Cy(r=r_tret_loch, h=60);
+
+    T(-130, 47, 290) R(0,90-4,-2.15) Cy(r=r_kett_muf+r_off,h=l);
+
+Ty((b_tret/2-l_tret_loch1)) Ry(w_tret_loch) Cy(r=r_tret_loch+r_off, h=60);
+Ty((b_tret/2-l_tret_loch2)) Ry(w_tret_loch+10) Cy(r=r_tret_loch+r_off, h=60);
+
+    
+    *Ty(-50) Tx(-r_blech+10-90) Ry(30) Rx(90) 
+          RiS(R=r_blech-10+r_off, r=50, h= 100, w1 = 30, $fn=100); 
+    Tx(-r_blech+steg_x) Tz(40) Ry(45) Rx(90) RiS(R=r_blech+r_off, r=50, h= 100, w1 = 35, $fn=100); 
 	} // color
 }
 
