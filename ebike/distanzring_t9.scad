@@ -1,23 +1,21 @@
 
 use <lib/shortcuts.scad>
-use <lib/mhop_lib.scad>
-
 
 $fn=100;
 
-ri=45.3/2; // holowtechradius
-ri2=36/2; // innenradius Distanzring
+ri=45.5/2; // holowtechradius
+ri2=(36+0.6)/2; // innenradius Distanzring
 
 ra=ri+2; // außenradius
-rkabel=3.1/2;
+rkabel=3.5/2;
 
 h=8; // gesamthöhe
-d=0.6; // Dicke Steg am Kabel
+d=0.5; // Dicke Steg am Kabel
 
-h2=3; // dicke distanzscheibe
+h2=rkabel*2+d; // dicke distanzscheibe
+
 
 t9_distanz();
-
 
 module t9_distanz() {
     D() {
